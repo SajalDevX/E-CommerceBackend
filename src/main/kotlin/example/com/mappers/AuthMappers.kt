@@ -1,7 +1,7 @@
 package example.com.mappers
 
 
-import example.com.dao.users.UserEntity
+import example.com.dao.users.entity.UserEntity
 import example.com.model.SignUpParams
 import example.com.security.hashPassword
 

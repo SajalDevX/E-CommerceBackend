@@ -1,4 +1,4 @@
-package example.com.dao.product.entity
+package example.com.dao.items.product.entity
 
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
@@ -6,6 +6,7 @@ import org.bson.types.ObjectId
 @Serializable
 data class ProductEntity(
     val productId: String = ObjectId().toString(),
+    val userId:String,
     val categoryId: String,
     val subCategoryId: String?,
     val brandId: String?,
@@ -15,15 +16,20 @@ data class ProductEntity(
     val productDetail: String,
     val price: Double,
     val discountPrice: Double?,
-    val status: Int?,
     val videoLink: String?,
-    val mainSlider: String?,
     val hotDeal: String?,
-    val bestRated: String?,
-    val midSlider: String?,
-    val hotNew: String?,
-    val trend: String?,
+    val ratingId:List<String> = emptyList(),
     val buyOneGetOne: String?,
     val imageOne: String?,
     val imageTwo: String?,
+)
+
+@Serializable
+data class ProductRating(
+    val ratingId:String = ObjectId().toString(),
+    val productId:String,
+    val userId:String,
+    val stars:Int,
+    val comment:String,
+    val likes:Int
 )

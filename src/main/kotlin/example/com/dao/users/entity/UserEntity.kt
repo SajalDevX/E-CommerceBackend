@@ -1,4 +1,4 @@
-package example.com.dao.users
+package example.com.dao.users.entity
 
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId

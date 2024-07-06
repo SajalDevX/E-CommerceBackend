@@ -1,4 +1,4 @@
-package example.com.dao.product.entity.category
+package example.com.dao.items.product_category
 
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
@@ -8,6 +8,6 @@ import org.bson.types.ObjectId
 data class ProductCategory(
     val productCategoryId:String = ObjectId().toString(),
     val categoryName:String,
-    val subCategories:List<ProductSubCategory>,
+    val subCategories:List<String> = emptyList(),
     val image:String?
 )

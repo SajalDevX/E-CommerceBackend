@@ -1,4 +1,4 @@
-package example.com.dao.product.entity
+package example.com.dao.items.brand
 
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
