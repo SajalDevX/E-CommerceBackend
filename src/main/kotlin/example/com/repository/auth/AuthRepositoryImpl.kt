@@ -6,7 +6,9 @@ import example.com.model.AuthResponse
 import example.com.model.AuthResponseData
 import example.com.model.SignInParams
 import example.com.model.SignUpParams
+import example.com.plugins.JwtController
 import example.com.security.hashPassword
+import example.com.utils.JwtTokenBody
 import example.com.utils.Response
 import io.ktor.http.*
 
@@ -31,13 +33,14 @@ class AuthRepositoryImpl(
                     )
                 )
             }else {
+
                 Response.Success(
                     data = AuthResponse(
                         AuthResponseData(
                             userId = insertedUser.userId,
                             name = insertedUser.name,
                             imageUrl = insertedUser.imageUrl,
-                            token = "generateToken(params.email)"
+                            token = JwtController.tokenProvider(JwtTokenBody(userType = insertedUser.userDetails.userRole, userId = insertedUser.userId, email = insertedUser.email)),
                         )
                     )
                 )
@@ -64,7 +67,7 @@ class AuthRepositoryImpl(
                             userId = user.userId,
                             name = user.name,
                             imageUrl = user.imageUrl,
-                            token = "generateToken(params.email)"
+                            token = JwtController.tokenProvider(JwtTokenBody(userType = user.userDetails.userRole, userId = user.userId, email = user.email)),
                         )
                     )
                 )

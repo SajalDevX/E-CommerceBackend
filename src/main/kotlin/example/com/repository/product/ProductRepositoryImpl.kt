@@ -1,6 +1,6 @@
 package example.com.repository.product
 
-import example.com.dao.items.product.ProductDao
+import example.com.dao.products.product.ProductDao
 import example.com.model.AddProduct
 import example.com.model.ProductResponse
 import example.com.model.ProductWithFilter

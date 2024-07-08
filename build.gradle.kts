@@ -47,6 +47,8 @@ dependencies {
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
+    implementation("dev.forst:ktor-openapi-generator:0.6.1")
+
 
     implementation("org.litote.kmongo:kmongo-coroutine:$mongo_version")
     implementation("org.litote.kmongo:kmongo:$mongo_version")

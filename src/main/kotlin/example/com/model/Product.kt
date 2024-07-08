@@ -1,6 +1,6 @@
 package example.com.model
 
-import example.com.dao.items.product.entity.ProductEntity
+import example.com.dao.products.product.entity.ProductEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -56,4 +56,8 @@ data class ProductResponse(
     val product: ProductEntity? = null,
     val allProducts: List<ProductEntity> = emptyList(),
     val message: String? = null
+)
+@Serializable
+data class ProductIdParams(
+    val productId:String
 )

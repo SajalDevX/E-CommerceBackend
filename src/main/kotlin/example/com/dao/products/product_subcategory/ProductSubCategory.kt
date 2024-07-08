@@ -1,4 +1,4 @@
-package example.com.dao.items.product_subcategory
+package example.com.dao.products.product_subcategory
 
 import kotlinx.serialization.Serializable
 

@@ -4,9 +4,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpParams(
-    val name: String, val email: String, val password: String
+    val name: String, val email: String, val password: String,val userDetailsParams:UserDetailsParams
 )
 
+@Serializable
+data class UserDetailsParams(
+    val age: String? = null,
+    val mobile: String,
+    val gender: String,
+    val userRole: String,
+)
 @Serializable
 data class SignInParams(
     val email: String, val password: String

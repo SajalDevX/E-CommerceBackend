@@ -1,7 +1,6 @@
-package example.com.dao.items.product
+package example.com.dao.products.product
 
-import example.com.dao.items.product.entity.ProductEntity
-import example.com.dao.items.product.entity.ProductImages
+import example.com.dao.products.product.entity.ProductEntity
 import example.com.model.AddProduct
 import example.com.model.ProductWithFilter
 import example.com.model.UpdateProduct

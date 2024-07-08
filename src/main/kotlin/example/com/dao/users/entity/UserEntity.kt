@@ -12,33 +12,36 @@ data class UserEntity(
     val email: String = "",
     val password: String = "",
     val imageUrl: String = "",
-    val userData: UserData,
+    val userData: UserData?=null,
     val userDetails: UserDetails,
 )
+
 @Serializable
 data class UserDetails(
-    val addresses:List<UserAddress> = emptyList(),
-    val age:String?=null,
-    val mobile:String,
-    val gender:String,
+    val addresses: List<UserAddress> = emptyList(),
+    val age: String? = null,
+    val mobile: String,
+    val gender: String,
+    val userRole: String,
 )
+
 @Serializable
 data class UserData(
-    val userRole: String,
-    val cartItems:List<String> = emptyList(),
-    val wishlist:List<String> = emptyList(),
-    val delivered:List<String> = emptyList(),
-    val ordered :List<String> = emptyList(),
-    val cancelled:List<String> = emptyList(),
+    val cartItems: List<String> = emptyList(),
+    val wishlist: List<String> = emptyList(),
+    val delivered: List<String> = emptyList(),
+    val ordered: List<String> = emptyList(),
+    val cancelled: List<String> = emptyList(),
 )
+
 @Serializable
 data class UserAddress(
-    val fatherName:String,
-    val motherName:String,
-    val pin:String,
-    val mobileNumber:String,
-    val otherMobileNumber:String?=null,
-    val city:String,
-    val road:String,
-    val state:String,
+    val fatherName: String,
+    val motherName: String,
+    val pin: String,
+    val mobileNumber: String,
+    val otherMobileNumber: String? = null,
+    val city: String,
+    val road: String,
+    val state: String,
 )

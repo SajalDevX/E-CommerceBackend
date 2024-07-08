@@ -1,11 +1,10 @@
-package example.com.dao.items.product
+package example.com.dao.products.product
 
 import com.mongodb.client.model.Filters
-import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
-import example.com.dao.items.product.entity.ProductEntity
-import example.com.dao.items.product.entity.ProductImages
+import example.com.dao.products.product.entity.ProductEntity
+import example.com.dao.products.product.entity.ProductImages
 import example.com.model.AddProduct
 import example.com.model.ProductWithFilter
 import example.com.model.UpdateProduct
@@ -13,9 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.conversions.Bson
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.coroutine.insertOne
-import org.litote.kmongo.coroutine.updateOne
-import org.litote.kmongo.eq
 
 class ProductDaoImpl(
     db: CoroutineDatabase

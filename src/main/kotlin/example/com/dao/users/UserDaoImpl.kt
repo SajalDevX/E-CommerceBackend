@@ -1,7 +1,6 @@
-package com.mrsajal.dao.users
+package example.com.dao.users
 
 import com.mongodb.client.model.Filters
-import example.com.dao.users.UserDao
 import example.com.dao.users.entity.UserEntity
 import org.litote.kmongo.coroutine.CoroutineDatabase
 
