@@ -1,5 +1,7 @@
 package example.com.model
 
+import com.papsign.ktor.openapigen.annotations.parameters.PathParam
+import com.papsign.ktor.openapigen.annotations.parameters.QueryParam
 import example.com.dao.products.product.entity.ProductEntity
 import kotlinx.serialization.Serializable
 
@@ -39,15 +41,14 @@ data class UpdateProduct(
     val imageTwo: String?,
 )
 
-@Serializable
 data class ProductWithFilter(
-    val limit: Int,
-    val offset: Int,
-    val maxPrice: Double?,
-    val minPrice: Double?,
-    val categoryId: String?,
-    val subCategoryId: String?,
-    val brandId: String?,
+    @QueryParam("limit") val limit: Int,
+    @QueryParam("offset") val offset: Int,
+    @QueryParam("maxPrice") val maxPrice: Double?,
+    @QueryParam("minPrice") val minPrice: Double?,
+    @QueryParam("categoryId") val categoryId: String?,
+    @QueryParam("subCategoryId") val subCategoryId: String?,
+    @QueryParam("brandId") val brandId: String?,
 )
 
 @Serializable
@@ -61,3 +62,5 @@ data class ProductResponse(
 data class ProductIdParams(
     val productId:String
 )
+@Serializable
+data class ProductIdQueryParams(@PathParam("productId") val productId: String)

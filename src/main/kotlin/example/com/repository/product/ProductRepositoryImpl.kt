@@ -1,10 +1,7 @@
 package example.com.repository.product
 
 import example.com.dao.products.product.ProductDao
-import example.com.model.AddProduct
-import example.com.model.ProductResponse
-import example.com.model.ProductWithFilter
-import example.com.model.UpdateProduct
+import example.com.model.*
 import example.com.utils.Response
 import io.ktor.http.*
 
@@ -140,6 +137,27 @@ class ProductRepositoryImpl(
                 data = ProductResponse(
                     success = true,
                     message = "Images uploaded to database"
+                )
+            )
+        }
+    }
+
+    override suspend fun getProductDetail(productId: String): Response<ProductResponse> {
+        val request = productDao.productDetail(productId)
+        return if (request==null) {
+            Response.Error(
+                code = HttpStatusCode.InternalServerError,
+                data = ProductResponse(
+                    success = false,
+                    message = "Could not get product details"
+                )
+            )
+        } else {
+            Response.Success(
+                data = ProductResponse(
+                    success = true,
+                    product = request,
+                    message = "Product details fetched successfully"
                 )
             )
         }

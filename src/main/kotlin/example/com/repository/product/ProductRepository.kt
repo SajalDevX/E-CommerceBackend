@@ -1,9 +1,6 @@
 package example.com.repository.product
 
-import example.com.model.AddProduct
-import example.com.model.ProductResponse
-import example.com.model.ProductWithFilter
-import example.com.model.UpdateProduct
+import example.com.model.*
 import example.com.utils.Response
 
 interface ProductRepository {
@@ -13,4 +10,5 @@ interface ProductRepository {
     suspend fun getProductById(userId: String, productId: String):Response<ProductResponse>
     suspend fun deleteProduct(userId: String, productId: String):Response<ProductResponse>
     suspend fun uploadProductImages(userId: String, productId: String, images: String):Response<ProductResponse>
+    suspend fun getProductDetail(productId:String):Response<ProductResponse>
 }
