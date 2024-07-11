@@ -92,7 +92,6 @@ class ProductDaoImpl(
 
         return withContext(Dispatchers.IO) {
             products.find(queryFilter).limit(productQuery.limit).skip(productQuery.offset).toList()
-
         }
     }
 
