@@ -98,19 +98,15 @@ class ProductRepositoryImpl(
     override suspend fun deleteProduct(userId: String, productId: String): Response<ProductResponse> {
         val request = productDao.deleteProduct(userId, productId)
         return if (request) {
+            Response.Success(
+                data = ProductResponse(success = true)
+            )
+        } else {
             Response.Error(
                 code = HttpStatusCode.InternalServerError,
                 data = ProductResponse(
                     success = false,
-                    message = "Could not delete requested product from database"
-                )
-            )
-        } else {
-
-            Response.Success(
-                data = ProductResponse(
-                    success = true,
-                    message = "Product deleted from database"
+                    message = "Post could not be deleted from the db"
                 )
             )
         }
@@ -123,7 +119,7 @@ class ProductRepositoryImpl(
         images: String
     ): Response<ProductResponse> {
         val request = productDao.uploadProductImages(userId, productId, images)
-        return if (request) {
+        return if (!request) {
             Response.Error(
                 code = HttpStatusCode.InternalServerError,
                 data = ProductResponse(
@@ -144,7 +140,7 @@ class ProductRepositoryImpl(
 
     override suspend fun getProductDetail(productId: String): Response<ProductResponse> {
         val request = productDao.productDetail(productId)
-        return if (request==null) {
+        return if (request == null) {
             Response.Error(
                 code = HttpStatusCode.InternalServerError,
                 data = ProductResponse(

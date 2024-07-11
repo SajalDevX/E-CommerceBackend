@@ -6,7 +6,7 @@ import example.com.model.AuthResponse
 import example.com.model.AuthResponseData
 import example.com.model.SignInParams
 import example.com.model.SignUpParams
-import example.com.plugins.JwtController
+import example.com.plugins.generateToken
 import example.com.security.hashPassword
 import example.com.utils.JwtTokenBody
 import example.com.utils.Response
@@ -32,7 +32,7 @@ class AuthRepositoryImpl(
                         errorMessage = "Oops, sorry we couldn't register the user try later"
                     )
                 )
-            }else {
+            } else {
 
                 Response.Success(
                     data = AuthResponse(
@@ -40,7 +40,11 @@ class AuthRepositoryImpl(
                             userId = insertedUser.userId,
                             name = insertedUser.name,
                             imageUrl = insertedUser.imageUrl,
-                            token = JwtController.tokenProvider(JwtTokenBody(userType = insertedUser.userDetails.userRole, userId = insertedUser.userId, email = insertedUser.email)),
+                            token = generateToken(
+                                insertedUser.userId,
+                                insertedUser.email,
+                                insertedUser.userDetails.userRole
+                            ),
                         )
                     )
                 )
@@ -50,15 +54,14 @@ class AuthRepositoryImpl(
 
     override suspend fun signIn(params: SignInParams): Response<AuthResponse> {
         val user = userDao.findUserByEmail(params.email)
-        return if(user==null){
+        return if (user == null) {
             Response.Error(
                 code = HttpStatusCode.NotFound,
                 data = AuthResponse(
                     errorMessage = "Invalid Credentials, No user with this email!"
                 )
             )
-        }
-        else{
+        } else {
             val hashedPassword = hashPassword(params.password)
             if (user.password == hashedPassword) {
                 Response.Success(
@@ -67,7 +70,7 @@ class AuthRepositoryImpl(
                             userId = user.userId,
                             name = user.name,
                             imageUrl = user.imageUrl,
-                            token = JwtController.tokenProvider(JwtTokenBody(userType = user.userDetails.userRole, userId = user.userId, email = user.email)),
+                            token = generateToken(user.userId, user.email, user.userDetails.userRole),
                         )
                     )
                 )
@@ -81,6 +84,7 @@ class AuthRepositoryImpl(
             }
         }
     }
+
     private suspend fun userAlreadyExists(email: String): Boolean {
         return userDao.findUserByEmail(email) != null
     }

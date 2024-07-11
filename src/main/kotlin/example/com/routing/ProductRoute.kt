@@ -1,188 +1,275 @@
 package example.com.routing
 
-import com.papsign.ktor.openapigen.route.path.auth.get
-import com.papsign.ktor.openapigen.route.path.auth.post
-import com.papsign.ktor.openapigen.route.path.auth.principal
-import com.papsign.ktor.openapigen.route.path.normal.NormalOpenAPIRoute
-import com.papsign.ktor.openapigen.route.response.respond
-import com.papsign.ktor.openapigen.route.route
+import example.com.mappers.hasRole
+import example.com.mappers.toUpdateProduct
 import example.com.model.*
 import example.com.plugins.RoleManagement
 import example.com.repository.product.ProductRepository
-import example.com.utils.JwtTokenBody
-import example.com.utils.Response
-import example.com.utils.authenticateWithJwt
+import example.com.utils.Constants
+import example.com.utils.getLongParameter
+import example.com.utils.saveFile
+import io.ktor.http.*
+import io.ktor.http.content.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
-fun NormalOpenAPIRoute.productRoute(repository: ProductRepository) {
-    route("product") {
+fun Routing.productRoute(repository: ProductRepository) {
+    authenticate("auth-jwt") {
+        route("product") {
+            route("get") {
+                get {
+                    if (call.hasRole(RoleManagement.CUSTOMER, RoleManagement.SELLER, RoleManagement.ADMIN)) {
+                        try {
+                            val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 0
+                            val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 0
+                            val maxPrice = call.request.queryParameters["maxPrice"]?.toDoubleOrNull() ?: 0.0
+                            val minPrice = call.request.queryParameters["minPrice"]?.toDoubleOrNull() ?: 0.0
+                            val categoryId = call.request.queryParameters["categoryId"]
+                            val subCategoryId = call.request.queryParameters["subCategoryId"]
+                            val brandId = call.request.queryParameters["brandId"]
+                            val params = ProductWithFilter(
+                                limit, offset, maxPrice, minPrice, categoryId, subCategoryId, brandId
+                            )
+                            val result = repository.getProducts(params)
 
-        authenticateWithJwt(RoleManagement.CUSTOMER.role, RoleManagement.SELLER.role, RoleManagement.ADMIN.role) {
-            route("/{productId}").get<ProductIdQueryParams, ProductResponse, JwtTokenBody> { params ->
-                try {
-                    val result = repository.getProductDetail(params.productId)
-                    when (result) {
-                        is Response.Error -> {
-                            respond(
-                                ProductResponse(
-                                    success = result.data.success,
-                                    message = result.data.message,
+                            call.respond(
+                                status = result.code,
+                                message = result.data
+                            )
+
+                        } catch (badRequestError: BadRequestException) {
+                            return@get
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
                                 )
                             )
                         }
-                        is Response.Success ->{
-                            respond(
-                                ProductResponse(
-                                    success = result.data.success,
-                                    product = result.data.product,
-                                    message = result.data.message,
-                                    allProducts = result.data.allProducts                                )
-                            )
-
-                        }
-                    }
-                }catch (badRequestError: BadRequestException) {
-                    respond(
-                        ProductResponse(
-                            success = false,
-                            message = badRequestError.message ?: "Bad request"
-                        )
-                    )
-                } catch (anyError: Throwable) {
-                    respond(
-                        ProductResponse(
-                            success = false,
-                            message = "An unexpected error has occurred, try again!"
-                        )
-                    )
-                }
-                get<ProductWithFilter, ProductResponse, JwtTokenBody>{params->
-                    try {
-                        val result = repository.getProducts(params)
-                        when (result) {
-                            is Response.Error -> {
-                                respond(
-                                    ProductResponse(
-                                        success = result.data.success,
-                                        message = result.data.message,
-                                    )
-                                )
-                            }
-                            is Response.Success ->{
-                                respond(
-                                    ProductResponse(
-                                        success = result.data.success,
-                                        product = result.data.product,
-                                        message = result.data.message,
-                                        allProducts = result.data.allProducts                                )
-                                )
-
-                            }
-                        }
-                    }catch (badRequestError: BadRequestException) {
-                        respond(
-                            ProductResponse(
-                                success = false,
-                                message = badRequestError.message ?: "Bad request"
-                            )
-                        )
-                    } catch (anyError: Throwable) {
-                        respond(
-                            ProductResponse(
-                                success = false,
-                                message = "An unexpected error has occurred, try again!"
-                            )
-                        )
                     }
                 }
             }
-
-        }
-
-        authenticateWithJwt(RoleManagement.SELLER.role) {
-            route("seller").post<Unit, ProductResponse, AddProduct, JwtTokenBody> { _, requestBody ->
-                try {
-                    val result = repository.addProduct(principal().userId, params = requestBody)
-                    when (result) {
-                        is Response.Error -> {
-                            respond(
-                                ProductResponse(
-                                    success = result.data.success,
-                                    message = result.data.message,
-                                )
+            route("/{productId}") {
+                get {
+                    if (call.hasRole(RoleManagement.CUSTOMER, RoleManagement.SELLER, RoleManagement.ADMIN)) {
+                        try {
+                            val productId = call.getLongParameter("productId")
+                            val result = repository.getProductDetail(productId = productId)
+                            call.respond(
+                                status = result.code,
+                                message = result.data
                             )
-                        }
-
-                        is Response.Success -> {
-                            respond(
-                                ProductResponse(
-                                    success = result.data.success,
-                                    product = result.data.product,
-                                    message = result.data.message,
-                                    allProducts = result.data.allProducts
+                        } catch (badRequestError: BadRequestException) {
+                            return@get
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
                                 )
                             )
                         }
                     }
-                } catch (badRequestError: BadRequestException) {
-                    respond(
-                        ProductResponse(
-                            success = false,
-                            message = badRequestError.message ?: "Bad request"
-                        )
-                    )
-                } catch (anyError: Throwable) {
-                    respond(
-                        ProductResponse(
-                            success = false,
-                            message = "An unexpected error has occurred, try again!"
-                        )
-                    )
                 }
-                get<ProductIdParams, ProductResponse, JwtTokenBody> { params ->
+                delete {
+                    if (call.hasRole(RoleManagement.SELLER)) {
+                        try {
+                            val principal = call.principal<JWTPrincipal>()
+                            val userId = principal?.payload?.getClaim("userId")?.asString()
+                            val productId = call.getLongParameter("productId")
+                            val result = repository.deleteProduct(userId!!, productId)
+
+                            call.respond(
+                                status = result.code,
+                                message = result.data
+                            )
+                        } catch (badRequestError: BadRequestException) {
+                            return@delete
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            route("seller") {
+                get {
+                    if (call.hasRole(RoleManagement.SELLER)) {
+                        try {
+                            val productId = call.request.queryParameters["productId"] ?: ""
+                            val principal = call.principal<JWTPrincipal>()
+                            val userId = principal?.payload?.getClaim("userId")?.asString()
+
+                            val result = repository.getProductById(userId!!, productId)
+
+                            call.respond(
+                                status = result.code,
+                                message = result.data
+                            )
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
+                                )
+                            )
+                        }
+                    }
+                }
+                post {
                     try {
-                        val userId = principal().userId
-                        val result = repository.getProductById(userId, params.productId)
-                        when (result) {
-                            is Response.Error -> {
-                                respond(
-                                    ProductResponse(
-                                        success = result.data.success,
-                                        message = result.data.message,
+                        if (call.hasRole(RoleManagement.SELLER)) {
+                            val principal = call.principal<JWTPrincipal>()
+                            val userId = principal?.payload?.getClaim("userId")?.asString()
+                            val product = call.receiveNullable<AddProduct>()
+
+                            if (userId == null || product == null) {
+                                call.respond(
+                                    status = HttpStatusCode.BadRequest,
+                                    message = ProductResponse(
+                                        success = false, message = "Provide the required details"
                                     )
                                 )
+                                return@post
                             }
 
-                            is Response.Success -> {
-                                respond(
-                                    ProductResponse(
-                                        success = result.data.success,
-                                        product = result.data.product,
-                                        message = result.data.message,
-                                        allProducts = result.data.allProducts
-                                    )
-                                )
-                            }
-                        }
-                    } catch (badRequestError: BadRequestException) {
-                        respond(
-                            ProductResponse(
-                                success = false,
-                                message = badRequestError.message ?: "Bad request"
+                            val result = repository.addProduct(userId, product)
+                            call.respond(
+                                status = result.code,
+                                message = result.data
                             )
-                        )
+                        }
                     } catch (anyError: Throwable) {
-                        respond(
-                            ProductResponse(
+                        call.respond(
+                            status = HttpStatusCode.InternalServerError,
+                            message = ProductResponse(
                                 success = false,
                                 message = "An unexpected error has occurred, try again!"
                             )
                         )
+                    }
 
+                }
+                put("/update") {
+                    if (call.hasRole(RoleManagement.SELLER)) {
+                        try {
+                            val principal = call.principal<JWTPrincipal>()
+                            val userId = principal?.payload?.getClaim("userId")?.asString()
+                            val productId = call.request.queryParameters["productId"] ?: ""
+                            val params = call.receiveNullable<UpdateProduct>()
+
+                            if (params == null) {
+                                call.respond(
+                                    status = HttpStatusCode.BadRequest,
+                                    message = ProductResponse(
+                                        success = false, message = "Provide the required details"
+                                    )
+                                )
+                                return@put
+                            }
+
+                            // Fetch existing product details
+                            val existingProductResponse = repository.getProductDetail(productId)
+                            val existingProduct = existingProductResponse.data.product
+
+                            if (existingProduct == null) {
+                                call.respond(
+                                    status = HttpStatusCode.NotFound,
+                                    message = ProductResponse(
+                                        success = false, message = "Product not found"
+                                    )
+                                )
+                                return@put
+                            }
+
+                            val updatedProduct = existingProduct.copy(
+                                categoryId = params.categoryId ?: existingProduct.categoryId,
+                                subCategoryId = params.subCategoryId ?: existingProduct.subCategoryId,
+                                brandId = params.brandId ?: existingProduct.brandId,
+                                productName = params.productName ?: existingProduct.productName,
+                                productCode = params.productCode ?: existingProduct.productCode,
+                                productQuantity = params.productQuantity ?: existingProduct.productQuantity,
+                                productDetail = params.productDetail ?: existingProduct.productDetail,
+                                price = params.price ?: existingProduct.price,
+                                discountPrice = params.discountPrice ?: existingProduct.discountPrice,
+                                videoLink = params.videoLink ?: existingProduct.videoLink,
+                                hotDeal = params.hotDeal ?: existingProduct.hotDeal,
+                                buyOneGetOne = params.buyOneGetOne ?: existingProduct.buyOneGetOne,
+                                imageOne = params.imageOne ?: existingProduct.imageOne,
+                                imageTwo = params.imageTwo ?: existingProduct.imageTwo
+                            )
+
+                            val result = repository.updateProduct(userId!!, productId, updatedProduct.toUpdateProduct())
+                            call.respond(
+                                status = result.code,
+                                message = result.data
+                            )
+
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
+                                )
+                            )
+                        }
+                    }
+                }
+                post("/img") {
+                    if (call.hasRole(RoleManagement.SELLER)) {
+                        try {
+                            var fileName = ""
+                            val multiPartDate = call.receiveMultipart()
+                            val principal = call.principal<JWTPrincipal>()
+                            val userId = principal?.payload?.getClaim("userId")?.asString()
+                            val productId = call.getLongParameter("productId", isQueryParameter = true)
+                            multiPartDate.forEachPart { partDate ->
+                                when (partDate) {
+                                    is PartData.FileItem -> {
+                                        fileName =
+                                            partDate.saveFile(folderPath = Constants.Image.PRODUCT_IMAGE_FOLDER_PATH)
+                                    }
+
+                                    else -> {}
+                                }
+                                partDate.dispose()
+                            }
+                            val imageUrl = "${Constants.BASE_URL}${Constants.Image.PRODUCT_IMAGE_FOLDER}$fileName"
+                            val result = repository.uploadProductImages(userId!!, productId, imageUrl)
+
+                            call.respond(
+                                status = result.code,
+                                message = result.data
+                            )
+                        } catch (badRequestError: BadRequestException) {
+                            return@post
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
-

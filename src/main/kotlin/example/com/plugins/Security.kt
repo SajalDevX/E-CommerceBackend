@@ -1,6 +1,7 @@
 package example.com.plugins
 
-import example.com.utils.JwtTokenBody
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -9,39 +10,44 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.util.*
 
+val algorithm = Algorithm.HMAC256("secret")
+
 fun Application.configureSecurity() {
     install(Authentication) {
-        /**
-         * Setup the JWT authentication to be used in [Routing].
-         * If the token is valid, the corresponding [User] is fetched from the database.
-         * The [User] can then be accessed in each [ApplicationCall].
-         */
-        jwt(RoleManagement.CUSTOMER.role) {
-            provideJwtAuthConfig(this, RoleManagement.CUSTOMER)
-        }
-        jwt(RoleManagement.ADMIN.role) {
-            provideJwtAuthConfig(this, RoleManagement.ADMIN)
-        }
-        jwt(RoleManagement.SELLER.role) {
-            provideJwtAuthConfig(this, RoleManagement.SELLER)
-        }
-        jwt(RoleManagement.SUPER_ADMIN.role) {
-            provideJwtAuthConfig(this, RoleManagement.SUPER_ADMIN)
+        jwt("auth-jwt") {
+            realm = "ktor app"
+            verifier(
+                JWT
+                    .require(algorithm)
+                    .withAudience("ktor-audience")
+                    .withIssuer("ktor-issuer")
+                    .build()
+            )
+            validate { credential ->
+                val role = credential.payload.getClaim("role").asString()
+                val userId = credential.payload.getClaim("userId").asString()
+                val email = credential.payload.getClaim("email").asString()
+
+                if (role != null && userId != null && email != null &&
+                    RoleManagement.entries.map { it.role }.contains(role)) {
+                    JWTPrincipal(credential.payload)
+                } else null
+            }
+            challenge { defaultScheme, realm ->
+                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+            }
         }
     }
 }
 
-fun provideJwtAuthConfig(jwtConfig: JWTAuthenticationProvider.Config, userRole: RoleManagement) {
-    jwtConfig.verifier(JwtController.verifier)
-    jwtConfig.realm = "ktor.io"
-    jwtConfig.validate {
-        val userId = it.payload.getClaim("userId").asString()
-        val email = it.payload.getClaim("email").asString()
-        val userType = it.payload.getClaim("userType").asString()
-        if (userType == userRole.role) {
-            JwtTokenBody(userId, email, userType)
-        } else null
-    }
+fun generateToken(userId: String, email: String, role: String): String {
+    return JWT.create()
+        .withAudience("ktor-audience")
+        .withIssuer("ktor-issuer")
+        .withClaim("userId", userId)
+        .withClaim("email", email)
+        .withClaim("role", role)
+        .sign(algorithm)
 }
 
 enum class RoleManagement(val role: String) {
@@ -50,4 +56,3 @@ enum class RoleManagement(val role: String) {
     SELLER("seller"),
     CUSTOMER("customer")
 }
-

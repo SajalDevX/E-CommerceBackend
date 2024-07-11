@@ -5,7 +5,7 @@ import org.bson.types.ObjectId
 
 
 @Serializable
-data class ProductCategory(
+data class ProductCategoryEntity(
     val productCategoryId:String = ObjectId().toString(),
     val categoryName:String,
     val subCategories:List<String> = emptyList(),

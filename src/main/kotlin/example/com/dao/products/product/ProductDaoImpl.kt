@@ -123,12 +123,11 @@ class ProductDaoImpl(
 
         return withContext(Dispatchers.IO) {
             val result = products.deleteOne(queryFilter)
-            result.wasAcknowledged()
+            result.deletedCount>0
         }
     }
 
     override suspend fun uploadProductImages(userId: String, productId: String, images: String): Boolean {
-        // Insert image
         val imageEntity = ProductImages(
             userId = userId,
             productId = productId,
@@ -138,7 +137,6 @@ class ProductDaoImpl(
         val insertedImageResult = productImages.insertOne(imageEntity)
 
         if (insertedImageResult.wasAcknowledged()) {
-            // Update product with image reference
             val updateResult = products.updateOne(
                 Filters.eq("_id", productId),
                 Updates.addToSet("images", imageEntity.imageUrl)

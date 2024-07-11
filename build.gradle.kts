@@ -49,6 +49,8 @@ dependencies {
 
     implementation("dev.forst:ktor-openapi-generator:0.6.1")
 
+    implementation("org.valiktor:valiktor-core:0.12.0")
+
 
     implementation("org.litote.kmongo:kmongo-coroutine:$mongo_version")
     implementation("org.litote.kmongo:kmongo:$mongo_version")
