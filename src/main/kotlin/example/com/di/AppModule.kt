@@ -5,6 +5,8 @@ import example.com.dao.products.product.ProductDao
 import example.com.dao.products.product.ProductDaoImpl
 import example.com.dao.products.product_category.ProductCategoryDao
 import example.com.dao.products.product_category.ProductCategoryDaoImpl
+import example.com.dao.products.product_subcategory.ProductSubCategoryDao
+import example.com.dao.products.product_subcategory.ProductSubCategoryDaoImpl
 import example.com.dao.users.UserDao
 import example.com.dao.users.UserDaoImpl
 import example.com.repository.auth.AuthRepository
@@ -13,6 +15,8 @@ import example.com.repository.product.ProductRepository
 import example.com.repository.product.ProductRepositoryImpl
 import example.com.repository.product_category.ProductCategoryRepository
 import example.com.repository.product_category.ProductCategoryRepositoryImpl
+import example.com.repository.product_sub_category.ProductSubCategoryRepository
+import example.com.repository.product_sub_category.ProductSubCategoryRepositoryImpl
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -24,6 +28,8 @@ val appModule = module {
     single<ProductRepository> { ProductRepositoryImpl(get()) }
     single<ProductCategoryDao> { ProductCategoryDaoImpl(get()) }
     single<ProductCategoryRepository> { ProductCategoryRepositoryImpl(get()) }
+  single<ProductSubCategoryDao> { ProductSubCategoryDaoImpl(get()) }
+    single<ProductSubCategoryRepository> { ProductSubCategoryRepositoryImpl(get()) }
 
 
     single {

@@ -53,6 +53,14 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 )
                             )
                         }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ProductResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
                     }
                 }
             }
@@ -77,6 +85,14 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 )
                             )
                         }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ProductResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
                     }
                 }
                 delete {
@@ -102,6 +118,14 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 )
                             )
                         }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ProductResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
                     }
                 }
             }
@@ -128,11 +152,19 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 )
                             )
                         }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ProductResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
                     }
                 }
                 post {
-                    try {
-                        if (call.hasRole(RoleManagement.SELLER)) {
+                    if (call.hasRole(RoleManagement.SELLER)) {
+                        try {
                             val principal = call.principal<JWTPrincipal>()
                             val userId = principal?.payload?.getClaim("userId")?.asString()
                             val product = call.receiveNullable<AddProduct>()
@@ -152,13 +184,22 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 status = result.code,
                                 message = result.data
                             )
+
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
+                                )
+                            )
                         }
-                    } catch (anyError: Throwable) {
+                    } else {
                         call.respond(
-                            status = HttpStatusCode.InternalServerError,
+                            status = HttpStatusCode.Forbidden,
                             message = ProductResponse(
                                 success = false,
-                                message = "An unexpected error has occurred, try again!"
+                                message = "You do not have the required permissions to access this resource"
                             )
                         )
                     }
@@ -228,6 +269,14 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 )
                             )
                         }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ProductResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
                     }
                 }
                 post("/img") {
@@ -267,6 +316,14 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 )
                             )
                         }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ProductResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
                     }
                 }
             }

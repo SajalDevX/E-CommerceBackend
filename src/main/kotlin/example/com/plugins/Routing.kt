@@ -6,6 +6,7 @@ import example.com.repository.product.ProductRepository
 import example.com.routing.authRouting
 import example.com.routing.productCategoryRoute
 import example.com.routing.productRoute
+import example.com.routing.productSubCategoryRoute
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
@@ -19,6 +20,7 @@ fun Application.configureRouting() {
             authRouting(authRepository)
             productRoute(productRepository)
             productCategoryRoute()
+            productSubCategoryRoute()
             static {
                 resources("static")
             }
