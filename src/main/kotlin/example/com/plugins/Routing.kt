@@ -3,10 +3,7 @@ package example.com.plugins
 import com.papsign.ktor.openapigen.route.apiRouting
 import example.com.repository.auth.AuthRepository
 import example.com.repository.product.ProductRepository
-import example.com.routing.authRouting
-import example.com.routing.productCategoryRoute
-import example.com.routing.productRoute
-import example.com.routing.productSubCategoryRoute
+import example.com.routing.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
@@ -21,6 +18,7 @@ fun Application.configureRouting() {
             productRoute(productRepository)
             productCategoryRoute()
             productSubCategoryRoute()
+            brandRoute()
             static {
                 resources("static")
             }

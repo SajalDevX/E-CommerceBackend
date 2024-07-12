@@ -31,7 +31,7 @@ class ProductCategoryDaoImpl(
         val filter = Filters.eq("_id", id)
         val update = Updates.set("categoryName", name)
         val result: UpdateResult = category.updateOne(filter, update)
-        return result.wasAcknowledged()
+        return result.modifiedCount>0
     }
 
     override suspend fun deleteProductCategory(deleteProductCategory: String): Boolean {
