@@ -1,7 +1,5 @@
 package example.com.model
 
-import com.papsign.ktor.openapigen.annotations.parameters.PathParam
-import com.papsign.ktor.openapigen.annotations.parameters.QueryParam
 import example.com.dao.products.product.entity.ProductEntity
 import kotlinx.serialization.Serializable
 

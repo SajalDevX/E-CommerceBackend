@@ -20,6 +20,7 @@ fun Application.configureRouting() {
             productSubCategoryRoute()
             brandRoute()
             shopRoute()
+            ordersRoute()
             static {
                 resources("static")
             }

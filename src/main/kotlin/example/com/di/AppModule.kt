@@ -1,6 +1,8 @@
 package example.com.di
 
 
+import example.com.dao.order.OrderDao
+import example.com.dao.order.OrderDaoImpl
 import example.com.dao.products.brand.BrandDao
 import example.com.dao.products.brand.BrandDaoImpl
 import example.com.dao.products.product.ProductDao
@@ -17,6 +19,8 @@ import example.com.repository.auth.AuthRepository
 import example.com.repository.auth.AuthRepositoryImpl
 import example.com.repository.brand.BrandRepository
 import example.com.repository.brand.BrandRepositoryImpl
+import example.com.repository.orders.OrderRepository
+import example.com.repository.orders.OrderRepositoryImpl
 import example.com.repository.product.ProductRepository
 import example.com.repository.product.ProductRepositoryImpl
 import example.com.repository.product_category.ProductCategoryRepository
@@ -42,6 +46,8 @@ val appModule = module {
     single<BrandRepository> { BrandRepositoryImpl(get()) }
     single<ShopDao> { ShopDaoImpl(get()) }
     single<ShopRepository> { ShopRepositoryImpl(get()) }
+    single<OrderDao> { OrderDaoImpl(get()) }
+    single<OrderRepository> { OrderRepositoryImpl(get()) }
 
 
     single {

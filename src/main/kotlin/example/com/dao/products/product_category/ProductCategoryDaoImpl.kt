@@ -3,7 +3,7 @@ package example.com.dao.products.product_category
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
-import example.com.model.PagingData
+import example.com.utils.PagingData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.litote.kmongo.coroutine.CoroutineDatabase

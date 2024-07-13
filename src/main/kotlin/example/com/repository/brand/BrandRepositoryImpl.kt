@@ -2,7 +2,7 @@ package example.com.repository.brand
 
 import example.com.dao.products.brand.BrandDao
 import example.com.model.BrandResponse
-import example.com.model.PagingData
+import example.com.utils.PagingData
 import example.com.utils.Response
 import io.ktor.http.*
 

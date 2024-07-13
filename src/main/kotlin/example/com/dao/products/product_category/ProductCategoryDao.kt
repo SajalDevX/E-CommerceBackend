@@ -1,6 +1,6 @@
 package example.com.dao.products.product_category
 
-import example.com.model.PagingData
+import example.com.utils.PagingData
 
 interface ProductCategoryDao{
     suspend fun createProductCategory(addProductCategory: String):Boolean

@@ -1,6 +1,6 @@
 package example.com.repository.product_category
 
-import example.com.model.PagingData
+import example.com.utils.PagingData
 import example.com.model.ProductCategoryResponse
 import example.com.utils.Response
 

@@ -1,7 +1,7 @@
 package example.com.routing
 
 import example.com.mappers.hasRole
-import example.com.model.PagingData
+import example.com.utils.PagingData
 import example.com.model.ProductResponse
 import example.com.plugins.RoleManagement
 import example.com.repository.brand.BrandRepository
