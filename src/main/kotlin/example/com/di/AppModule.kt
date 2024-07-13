@@ -11,6 +11,8 @@ import example.com.dao.products.product_category.ProductCategoryDao
 import example.com.dao.products.product_category.ProductCategoryDaoImpl
 import example.com.dao.products.product_subcategory.ProductSubCategoryDao
 import example.com.dao.products.product_subcategory.ProductSubCategoryDaoImpl
+import example.com.dao.shipping.ShippingDao
+import example.com.dao.shipping.ShippingDaoImpl
 import example.com.dao.shop.ShopDao
 import example.com.dao.shop.ShopDaoImpl
 import example.com.dao.users.UserDao
@@ -27,6 +29,8 @@ import example.com.repository.product_category.ProductCategoryRepository
 import example.com.repository.product_category.ProductCategoryRepositoryImpl
 import example.com.repository.product_sub_category.ProductSubCategoryRepository
 import example.com.repository.product_sub_category.ProductSubCategoryRepositoryImpl
+import example.com.repository.shipping.ShippingRepository
+import example.com.repository.shipping.ShippingRepositoryImpl
 import example.com.repository.shop.ShopRepository
 import example.com.repository.shop.ShopRepositoryImpl
 import org.koin.dsl.module
@@ -48,6 +52,8 @@ val appModule = module {
     single<ShopRepository> { ShopRepositoryImpl(get()) }
     single<OrderDao> { OrderDaoImpl(get()) }
     single<OrderRepository> { OrderRepositoryImpl(get()) }
+    single<ShippingDao> { ShippingDaoImpl(get()) }
+    single<ShippingRepository> { ShippingRepositoryImpl(get()) }
 
 
     single {
