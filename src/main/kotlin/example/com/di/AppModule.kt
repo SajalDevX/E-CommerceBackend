@@ -29,6 +29,8 @@ import example.com.repository.product_category.ProductCategoryRepository
 import example.com.repository.product_category.ProductCategoryRepositoryImpl
 import example.com.repository.product_sub_category.ProductSubCategoryRepository
 import example.com.repository.product_sub_category.ProductSubCategoryRepositoryImpl
+import example.com.repository.profile.ProfileRepository
+import example.com.repository.profile.ProfileRepositoryImpl
 import example.com.repository.shipping.ShippingRepository
 import example.com.repository.shipping.ShippingRepositoryImpl
 import example.com.repository.shop.ShopRepository
@@ -54,6 +56,7 @@ val appModule = module {
     single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<ShippingDao> { ShippingDaoImpl(get()) }
     single<ShippingRepository> { ShippingRepositoryImpl(get()) }
+    single<ProfileRepository> { ProfileRepositoryImpl(get()) }
 
 
     single {

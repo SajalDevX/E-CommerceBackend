@@ -61,7 +61,7 @@ class OrderRepositoryImpl(
         orderId: String,
         orderStatus: OrderStatus
     ): Response<OrderResponse> {
-        val result = dao.updateOrder( orderId, orderStatus)
+        val result = dao.updateOrder(orderId, orderStatus)
         return if (result==null) {
             Response.Error(
                 code = HttpStatusCode.InternalServerError,

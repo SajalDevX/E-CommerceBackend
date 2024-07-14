@@ -61,7 +61,7 @@ class ShippingDaoImpl(
         updateShipping.shipCountry?.let { updates.add(Updates.set("shipCountry", it)) }
 
         if (updates.isEmpty()) {
-            return null // No updates to be made
+            return null
         }
 
         val updateData = Updates.combine(updates)

@@ -22,6 +22,7 @@ fun Application.configureRouting() {
             shopRoute()
             ordersRoute()
             shippingRoute()
+            profileRoute()
             static {
                 resources("static")
             }

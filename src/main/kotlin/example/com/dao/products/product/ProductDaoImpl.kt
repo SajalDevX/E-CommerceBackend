@@ -45,7 +45,6 @@ class ProductDaoImpl(
         val filter = Filters.and(
             Filters.eq("_id", productId), Filters.eq("userId", userId)
         )
-
         val updates = mutableListOf<Bson>()
 
         updateProduct.categoryId.let { updates.add(Updates.set("categoryId", it)) }
