@@ -4,8 +4,6 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
-import example.com.dao.order.entity.OrderEntity
-import example.com.dao.users.entity.UserEntity
 import example.com.model.AddShipping
 import example.com.model.UpdateShipping
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +11,6 @@ import kotlinx.coroutines.withContext
 import org.bson.conversions.Bson
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.coroutine.insertOne
-import org.litote.kmongo.eq
 
 class ShippingDaoImpl(
     db: CoroutineDatabase
@@ -55,22 +51,29 @@ class ShippingDaoImpl(
             eq("userId", userId),
             eq("orderId", updateShipping.orderId)
         )
+
         val updates = mutableListOf<Bson>()
-        updateShipping.shipAddress.let { updates.add(Updates.set("shippingAddress", it)) }
-        updateShipping.shipCity.let { updates.add(Updates.set("shippingAddress", it)) }
-        updateShipping.shipPhone.let { updates.add(Updates.set("shippingAddress", it)) }
-        updateShipping.shipName.let { updates.add(Updates.set("shippingAddress", it)) }
-        updateShipping.shipEmail.let { updates.add(Updates.set("shippingAddress", it)) }
-        updateShipping.shipCountry.let { updates.add(Updates.set("shippingAddress", it)) }
+        updateShipping.shipAddress?.let { updates.add(Updates.set("shipAddress", it)) }
+        updateShipping.shipCity?.let { updates.add(Updates.set("shipCity", it)) }
+        updateShipping.shipPhone?.let { updates.add(Updates.set("shipPhone", it)) }
+        updateShipping.shipName?.let { updates.add(Updates.set("shipName", it)) }
+        updateShipping.shipEmail?.let { updates.add(Updates.set("shipEmail", it)) }
+        updateShipping.shipCountry?.let { updates.add(Updates.set("shipCountry", it)) }
+
+        if (updates.isEmpty()) {
+            return null // No updates to be made
+        }
+
         val updateData = Updates.combine(updates)
-        val result: UpdateResult = shipping.updateOne(filter, updateData)
-        val shipItem = shipping.findOne(filter)
+
         return withContext(Dispatchers.IO) {
+            val result: UpdateResult = shipping.updateOne(filter, updateData)
             if (result.modifiedCount > 0) {
-                shipItem
+                shipping.findOne(filter)
             } else null
         }
     }
+
 
     override suspend fun deleteShipping(userId: String, orderId: String): Boolean {
         val filter = Filters.and(
