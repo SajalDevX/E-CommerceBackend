@@ -58,6 +58,4 @@ dependencies {
 
     implementation("io.insert-koin:koin-ktor:$koin_version")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-
-
 }
