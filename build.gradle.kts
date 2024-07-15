@@ -56,6 +56,7 @@ dependencies {
     implementation("org.litote.kmongo:kmongo:$mongo_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
 
+
     implementation("io.insert-koin:koin-ktor:$koin_version")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 }
