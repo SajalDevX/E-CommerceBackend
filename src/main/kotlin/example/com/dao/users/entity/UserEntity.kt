@@ -12,7 +12,6 @@ data class UserEntity(
     val email: String = "",
     val password: String = "",
     val imageUrl: String = "",
-    val userData: UserData?=null,
     val userDetails: UserDetails,
 )
 
@@ -23,15 +22,6 @@ data class UserDetails(
     val mobile: String,
     val gender: String,
     val userRole: String,
-)
-
-@Serializable
-data class UserData(
-    val cartItems: List<String> = emptyList(),
-    val wishlist: List<String> = emptyList(),
-    val delivered: List<String> = emptyList(),
-    val ordered: List<String> = emptyList(),
-    val cancelled: List<String> = emptyList(),
 )
 
 @Serializable

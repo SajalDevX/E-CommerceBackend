@@ -278,9 +278,7 @@ fun Routing.ordersRoute() {
                 put {
                     if (call.hasRole(RoleManagement.SELLER)) {
                         try {
-                            val principal = call.principal<JWTPrincipal>()
-                            val userId = principal?.payload?.getClaim("userId")?.asString()
-                            val orderId = call.request.queryParameters["orderId"]
+                           val orderId = call.request.queryParameters["orderId"]
                             val orderStatus = OrderStatus.DELIVERED
                             if (orderId == null) {
                                 call.respond(

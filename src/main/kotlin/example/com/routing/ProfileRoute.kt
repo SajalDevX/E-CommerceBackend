@@ -19,7 +19,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
-import java.io.File
 
 fun Routing.profileRoute() {
     val repository by inject<ProfileRepository>()

@@ -1,6 +1,8 @@
 package example.com.di
 
 
+import example.com.dao.cart.CartDao
+import example.com.dao.cart.CartDaoImpl
 import example.com.dao.order.OrderDao
 import example.com.dao.order.OrderDaoImpl
 import example.com.dao.products.brand.BrandDao
@@ -21,6 +23,8 @@ import example.com.repository.auth.AuthRepository
 import example.com.repository.auth.AuthRepositoryImpl
 import example.com.repository.brand.BrandRepository
 import example.com.repository.brand.BrandRepositoryImpl
+import example.com.repository.cart.CartRepository
+import example.com.repository.cart.CartRepositoryImpl
 import example.com.repository.orders.OrderRepository
 import example.com.repository.orders.OrderRepositoryImpl
 import example.com.repository.product.ProductRepository
@@ -57,6 +61,8 @@ val appModule = module {
     single<ShippingDao> { ShippingDaoImpl(get()) }
     single<ShippingRepository> { ShippingRepositoryImpl(get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
+    single<CartDao> { CartDaoImpl(get()) }
+    single<CartRepository> { CartRepositoryImpl(get()) }
 
 
     single {
