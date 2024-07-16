@@ -23,13 +23,3 @@ data class ProductEntity(
     val ratingId:List<String> = emptyList(),
     val buyOneGetOne: String?,
 )
-
-@Serializable
-data class ProductRating(
-    val ratingId:String = ObjectId().toString(),
-    val productId:String,
-    val userId:String,
-    val stars:Int,
-    val comment:String,
-    val likes:Int
-)
