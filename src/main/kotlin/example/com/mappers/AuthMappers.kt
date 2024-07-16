@@ -27,5 +27,5 @@ fun UserDetailsParams.toUserDetails() =
 
 fun ProductEntity.toUpdateProduct() =
     UpdateProduct(
-        categoryId, subCategoryId, brandId, productName, productCode, productQuantity, productDetail, price, discountPrice, videoLink, hotDeal, buyOneGetOne, imageOne, imageTwo
+        categoryId, subCategoryId, brandId, productName, productCode, productQuantity, productDetail, price, discountPrice, videoLink, hotDeal, buyOneGetOne,
     )

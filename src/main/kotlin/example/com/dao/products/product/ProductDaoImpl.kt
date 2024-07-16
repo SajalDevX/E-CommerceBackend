@@ -35,8 +35,6 @@ class ProductDaoImpl(
             videoLink = addProduct.videoLink,
             hotDeal = addProduct.hotDeal,
             buyOneGetOne = addProduct.buyOneGetOne,
-            imageOne = addProduct.imageOne,
-            imageTwo = addProduct.imageTwo
         )
         val result = products.insertOne(insertedProduct)
         return result.wasAcknowledged()

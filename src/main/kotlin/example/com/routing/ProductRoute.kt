@@ -255,8 +255,6 @@ fun Routing.productRoute(repository: ProductRepository) {
                                 videoLink = params.videoLink ?: existingProduct.videoLink,
                                 hotDeal = params.hotDeal ?: existingProduct.hotDeal,
                                 buyOneGetOne = params.buyOneGetOne ?: existingProduct.buyOneGetOne,
-                                imageOne = params.imageOne ?: existingProduct.imageOne,
-                                imageTwo = params.imageTwo ?: existingProduct.imageTwo
                             )
 
                             val result = repository.updateProduct(userId!!, productId, updatedProduct.toUpdateProduct())

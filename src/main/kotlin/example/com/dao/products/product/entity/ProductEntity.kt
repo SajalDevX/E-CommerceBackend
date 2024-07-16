@@ -22,8 +22,6 @@ data class ProductEntity(
     val hotDeal: String?,
     val ratingId:List<String> = emptyList(),
     val buyOneGetOne: String?,
-    val imageOne: String?,
-    val imageTwo: String?,
 )
 
 @Serializable
