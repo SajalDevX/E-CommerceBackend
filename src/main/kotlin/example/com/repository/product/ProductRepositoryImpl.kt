@@ -73,8 +73,8 @@ class ProductRepositoryImpl(
         }
     }
 
-    override suspend fun getProductById(userId: String, productId: String): Response<ProductResponse> {
-        val product = productDao.getProductById(userId, productId)
+    override suspend fun getProductById( productId: String): Response<ProductResponse> {
+        val product = productDao.getProductById(productId)
         return if (product == null) {
             Response.Error(
                 code = HttpStatusCode.InternalServerError,

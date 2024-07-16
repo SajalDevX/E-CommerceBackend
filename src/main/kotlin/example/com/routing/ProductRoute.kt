@@ -133,11 +133,16 @@ fun Routing.productRoute(repository: ProductRepository) {
                 get {
                     if (call.hasRole(RoleManagement.SELLER)) {
                         try {
-                            val productId = call.request.queryParameters["productId"] ?: ""
-                            val principal = call.principal<JWTPrincipal>()
-                            val userId = principal?.payload?.getClaim("userId")?.asString()
+                            val productId = call.request.queryParameters["productId"]
+                            if (productId.isNullOrEmpty()) {
+                                call.respond(
+                                    status = HttpStatusCode.InternalServerError,
+                                    message = "Parameters are missing"
+                                )
+                                return@get
+                            }
 
-                            val result = repository.getProductById(userId!!, productId)
+                            val result = repository.getProductById(productId)
 
                             call.respond(
                                 status = result.code,

@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.conversions.Bson
 import org.litote.kmongo.coroutine.CoroutineDatabase
+import org.litote.kmongo.`in`
 
 class ProductDaoImpl(
     db: CoroutineDatabase
@@ -94,10 +95,9 @@ class ProductDaoImpl(
         }
     }
 
-    override suspend fun getProductById(userId: String, productId: String): ProductEntity? {
+    override suspend fun getProductById( productId: String): ProductEntity? {
         val queryFilter = Filters.and(
             Filters.eq("_id", productId),
-            Filters.eq("userId", userId)
         )
 
         return withContext(Dispatchers.IO) {
@@ -143,6 +143,10 @@ class ProductDaoImpl(
         }
 
         return false
+    }
+
+    override suspend fun getProducts(productIds: List<String>): List<ProductEntity> {
+        return products.find(ProductEntity::productId `in` productIds).toList()
     }
 
 }

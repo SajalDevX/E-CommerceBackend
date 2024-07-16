@@ -19,6 +19,8 @@ import example.com.dao.shop.ShopDao
 import example.com.dao.shop.ShopDaoImpl
 import example.com.dao.users.UserDao
 import example.com.dao.users.UserDaoImpl
+import example.com.dao.wishlist.WishListDao
+import example.com.dao.wishlist.WishListDaoImpl
 import example.com.repository.auth.AuthRepository
 import example.com.repository.auth.AuthRepositoryImpl
 import example.com.repository.brand.BrandRepository
@@ -39,6 +41,8 @@ import example.com.repository.shipping.ShippingRepository
 import example.com.repository.shipping.ShippingRepositoryImpl
 import example.com.repository.shop.ShopRepository
 import example.com.repository.shop.ShopRepositoryImpl
+import example.com.repository.wishlist.WishlistRepository
+import example.com.repository.wishlist.WishlistRepositoryImpl
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -63,6 +67,8 @@ val appModule = module {
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
     single<CartDao> { CartDaoImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get()) }
+    single<WishListDao> { WishListDaoImpl(get()) }
+    single<WishlistRepository> { WishlistRepositoryImpl(get(),get()) }
 
 
     single {

@@ -24,6 +24,7 @@ fun Application.configureRouting() {
             shippingRoute()
             profileRoute()
             cartRoute()
+            wishlistRoute()
             static {
                 resources("static")
             }
