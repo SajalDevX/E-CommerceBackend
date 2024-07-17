@@ -13,6 +13,8 @@ import example.com.dao.products.product_category.ProductCategoryDao
 import example.com.dao.products.product_category.ProductCategoryDaoImpl
 import example.com.dao.products.product_subcategory.ProductSubCategoryDao
 import example.com.dao.products.product_subcategory.ProductSubCategoryDaoImpl
+import example.com.dao.review.ReviewDao
+import example.com.dao.review.ReviewDaoImpl
 import example.com.dao.shipping.ShippingDao
 import example.com.dao.shipping.ShippingDaoImpl
 import example.com.dao.shop.ShopDao
@@ -37,6 +39,8 @@ import example.com.repository.product_sub_category.ProductSubCategoryRepository
 import example.com.repository.product_sub_category.ProductSubCategoryRepositoryImpl
 import example.com.repository.profile.ProfileRepository
 import example.com.repository.profile.ProfileRepositoryImpl
+import example.com.repository.review.ReviewRepository
+import example.com.repository.review.ReviewRepositoryImpl
 import example.com.repository.shipping.ShippingRepository
 import example.com.repository.shipping.ShippingRepositoryImpl
 import example.com.repository.shop.ShopRepository
@@ -69,7 +73,8 @@ val appModule = module {
     single<CartRepository> { CartRepositoryImpl(get()) }
     single<WishListDao> { WishListDaoImpl(get()) }
     single<WishlistRepository> { WishlistRepositoryImpl(get(),get()) }
-
+    single <ReviewDao>{ ReviewDaoImpl(get()) }
+    single <ReviewRepository>{ ReviewRepositoryImpl(get(),get()) }
 
     single {
         KMongo.createClient()

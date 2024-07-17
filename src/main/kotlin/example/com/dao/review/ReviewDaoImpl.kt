@@ -27,7 +27,13 @@ class ReviewDaoImpl(
             rating = rating,
             username = username
         )
+        val filters = Filters.eq("userId",userId)
+        val reviewExist =review.findOne(filters)
+        if(reviewExist!=null){
+            return null
+        }
         val result = review.insertOne(data)
+
         return if (result.wasAcknowledged()) {
             data
         } else {

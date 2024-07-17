@@ -25,6 +25,7 @@ fun Application.configureRouting() {
             profileRoute()
             cartRoute()
             wishlistRoute()
+            reviewRoute()
             static {
                 resources("static")
             }
