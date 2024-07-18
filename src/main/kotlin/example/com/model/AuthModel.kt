@@ -4,7 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpParams(
-    val name: String, val email: String, val password: String,val userDetailsParams:UserDetailsParams
+    val name: String,
+    val email: String,
+    val password: String,
+    val userDetailsParams: UserDetailsParams
 )
 
 @Serializable
@@ -14,6 +17,7 @@ data class UserDetailsParams(
     val gender: String,
     val userRole: String,
 )
+
 @Serializable
 data class SignInParams(
     val email: String, val password: String
@@ -28,6 +32,7 @@ data class AuthResponse(
 data class AuthResponseData(
     val userId: String,
     val name: String,
-    val imageUrl:String,
+    val imageUrl: String,
+    val userRole:String,
     val token: String,
 )

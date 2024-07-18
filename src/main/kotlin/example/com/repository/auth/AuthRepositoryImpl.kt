@@ -45,6 +45,7 @@ class AuthRepositoryImpl(
                                 insertedUser.email,
                                 insertedUser.userDetails.userRole
                             ),
+                            userRole = insertedUser.userDetails.userRole
                         )
                     )
                 )
@@ -71,6 +72,8 @@ class AuthRepositoryImpl(
                             name = user.name,
                             imageUrl = user.imageUrl,
                             token = generateToken(user.userId, user.email, user.userDetails.userRole),
+                            userRole = user.userDetails.userRole
+
                         )
                     )
                 )
