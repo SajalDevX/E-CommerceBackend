@@ -81,7 +81,7 @@ class AuthRepositoryImpl(
                 Response.Error(
                     code = HttpStatusCode.Forbidden,
                     data = AuthResponse(
-                        errorMessage = "Invalid Credentials, Wrong password! $hashedPassword != ${params.password}"
+                        errorMessage = "Invalid Credentials, Wrong password! "
                     )
                 )
             }

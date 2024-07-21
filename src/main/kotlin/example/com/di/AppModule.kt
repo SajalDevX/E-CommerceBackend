@@ -13,6 +13,8 @@ import example.com.dao.products.product_category.ProductCategoryDao
 import example.com.dao.products.product_category.ProductCategoryDaoImpl
 import example.com.dao.products.product_subcategory.ProductSubCategoryDao
 import example.com.dao.products.product_subcategory.ProductSubCategoryDaoImpl
+import example.com.dao.products.stock.StockDao
+import example.com.dao.products.stock.StockDaoImpl
 import example.com.dao.review.ReviewDao
 import example.com.dao.review.ReviewDaoImpl
 import example.com.dao.shipping.ShippingDao
@@ -45,6 +47,8 @@ import example.com.repository.shipping.ShippingRepository
 import example.com.repository.shipping.ShippingRepositoryImpl
 import example.com.repository.shop.ShopRepository
 import example.com.repository.shop.ShopRepositoryImpl
+import example.com.repository.stock.StockRepository
+import example.com.repository.stock.StockRepositoryImpl
 import example.com.repository.wishlist.WishlistRepository
 import example.com.repository.wishlist.WishlistRepositoryImpl
 import org.koin.dsl.module
@@ -75,6 +79,8 @@ val appModule = module {
     single<WishlistRepository> { WishlistRepositoryImpl(get(),get()) }
     single <ReviewDao>{ ReviewDaoImpl(get()) }
     single <ReviewRepository>{ ReviewRepositoryImpl(get(),get()) }
+    single <StockDao>{ StockDaoImpl(get()) }
+    single <StockRepository>{ StockRepositoryImpl(get()) }
 
     single {
         KMongo.createClient()

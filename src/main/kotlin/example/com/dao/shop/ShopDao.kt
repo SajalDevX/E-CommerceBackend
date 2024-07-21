@@ -10,4 +10,6 @@ interface ShopDao{
     suspend fun updateShopCategory(shopCategoryId:String,shopCategoryName: String):Boolean
     suspend fun deleteShopCategory(shopCategoryId: String):Boolean
     suspend fun createShop(userId:String,shopCategoryId: String,shopName:String): ShopEntity?
+//    suspend fun addItemsToShop(userId: String,productId:String,qty:String):ShopEntity?
+//    suspend fun removeItems(userId: String,productId:String):ShopEntity?
 }
