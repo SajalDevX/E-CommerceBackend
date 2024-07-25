@@ -22,4 +22,5 @@ data class ProductEntity(
     val hotDeal: String?,
     val ratingId:List<String> = emptyList(),
     val buyOneGetOne: String?,
+    val images:List<String> = emptyList()
 )

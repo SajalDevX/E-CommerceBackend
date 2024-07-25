@@ -8,8 +8,8 @@ import example.com.utils.Response
 class ProductCategoryRepositoryImpl(
     private val dao:ProductCategoryDao
 ) : ProductCategoryRepository {
-    override suspend fun createProductCategory(productCategoryName: String): Response<ProductCategoryResponse> {
-        val result = dao.createProductCategory(productCategoryName)
+    override suspend fun createProductCategory(productCategoryName: String,imageUrl:String): Response<ProductCategoryResponse> {
+        val result = dao.createProductCategory(productCategoryName,imageUrl)
         return if(result){
             Response.Success(
                 ProductCategoryResponse(

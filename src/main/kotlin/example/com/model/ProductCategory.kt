@@ -11,3 +11,7 @@ data class ProductCategoryResponse(
     val message:String,
     val categories:List<ProductCategoryEntity> = emptyList()
 )
+@Serializable
+data class CategoryTextParams(
+    val categoryName:String
+)

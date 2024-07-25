@@ -13,9 +13,9 @@ class ProductCategoryDaoImpl(
 ) : ProductCategoryDao {
 
     private val category = db.getCollection<ProductCategoryEntity>("product_category")
-    override suspend fun createProductCategory(addProductCategory: String): Boolean {
+    override suspend fun createProductCategory(addProductCategory: String,imageUrl:String): Boolean {
         val productCategory = ProductCategoryEntity(
-            categoryName = addProductCategory,
+            categoryName = addProductCategory, image = imageUrl
         )
         val result = category.insertOne(productCategory)
         return result.wasAcknowledged()

@@ -4,7 +4,6 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
 import example.com.dao.products.product.entity.ProductEntity
-import example.com.dao.products.product.entity.ProductImages
 import example.com.model.AddProduct
 import example.com.model.ProductWithFilter
 import example.com.model.UpdateProduct
@@ -19,7 +18,7 @@ class ProductDaoImpl(
 ) : ProductDao {
 
     private val products = db.getCollection<ProductEntity>("products")
-    private val productImages = db.getCollection<ProductImages>("product_img")
+
     override suspend fun addProduct(userId: String, addProduct: AddProduct): Boolean {
         val insertedProduct = ProductEntity(
             userId = userId,
@@ -35,6 +34,7 @@ class ProductDaoImpl(
             videoLink = addProduct.videoLink,
             hotDeal = addProduct.hotDeal,
             buyOneGetOne = addProduct.buyOneGetOne,
+            images = addProduct.images
         )
         val result = products.insertOne(insertedProduct)
         return result.wasAcknowledged()
@@ -58,8 +58,7 @@ class ProductDaoImpl(
         updateProduct.videoLink?.let { updates.add(Updates.set("videoLink", it)) }
         updateProduct.hotDeal?.let { updates.add(Updates.set("hotDeal", it)) }
         updateProduct.buyOneGetOne?.let { updates.add(Updates.set("buyOneGetOne", it)) }
-        updateProduct.imageOne?.let { updates.add(Updates.set("imageOne", it)) }
-        updateProduct.imageTwo?.let { updates.add(Updates.set("imageTwo", it)) }
+        updateProduct.images.let { updates.add(Updates.set("images", it)) }
 
         val update = Updates.combine(updates)
 
@@ -86,6 +85,10 @@ class ProductDaoImpl(
         productQuery.brandId?.let {
             filters.add(Filters.eq("brandId", it))
         }
+        productQuery.searchQuery?.let {
+            filters.add(Filters.regex("productName", it, "i")) // Case-insensitive search matching any part of the string
+        }
+
         val queryFilter = if (filters.isNotEmpty()) Filters.and(filters) else Filters.empty()
 
         return withContext(Dispatchers.IO) {
@@ -93,7 +96,7 @@ class ProductDaoImpl(
         }
     }
 
-    override suspend fun getProductById( productId: String): ProductEntity? {
+    override suspend fun getProductById(productId: String): ProductEntity? {
         val queryFilter = Filters.and(
             Filters.eq("_id", productId),
         )
@@ -119,32 +122,22 @@ class ProductDaoImpl(
 
         return withContext(Dispatchers.IO) {
             val result = products.deleteOne(queryFilter)
-            result.deletedCount>0
+            result.deletedCount > 0
         }
     }
 
     override suspend fun uploadProductImages(userId: String, productId: String, images: String): Boolean {
-        val imageEntity = ProductImages(
-            userId = userId,
-            productId = productId,
-            imageUrl = images
-        )
-
-        val insertedImageResult = productImages.insertOne(imageEntity)
-
-        if (insertedImageResult.wasAcknowledged()) {
-            val updateResult = products.updateOne(
+        val updateResult = products.updateOne(
+            Filters.and(
                 Filters.eq("_id", productId),
-                Updates.addToSet("images", imageEntity.imageUrl)
-            )
-            return updateResult.wasAcknowledged()
-        }
-
-        return false
+                Filters.eq("userId", userId)
+            ),
+            Updates.addToSet("images", images)
+        )
+        return updateResult.modifiedCount>0
     }
 
     override suspend fun getProducts(productIds: List<String>): List<ProductEntity> {
         return products.find(ProductEntity::productId `in` productIds).toList()
     }
-
 }

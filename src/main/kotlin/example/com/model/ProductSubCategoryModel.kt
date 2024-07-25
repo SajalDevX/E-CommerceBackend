@@ -9,3 +9,9 @@ data class ProductSubCategoryResponse(
     val message:String,
     val subCategories : List<ProductSubCategoryEntity> = emptyList(),
 )
+@Serializable
+data class SubCategoryTextParams(
+    val categoryId:String,
+    val subCategoryName:String,
+)
+

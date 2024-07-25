@@ -6,7 +6,7 @@ import example.com.utils.Response
 import io.ktor.http.*
 
 class ProductRepositoryImpl(
-    private val productDao: ProductDao
+    private val productDao: ProductDao,
 ) : ProductRepository {
     override suspend fun addProduct(userId: String, params: AddProduct): Response<ProductResponse> {
         val product = productDao.addProduct(userId, params)

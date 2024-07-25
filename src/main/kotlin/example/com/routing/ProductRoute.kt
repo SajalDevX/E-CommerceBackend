@@ -17,6 +17,7 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlin.math.min
 
 fun Routing.productRoute(repository: ProductRepository) {
     authenticate("auth-jwt") {
@@ -25,15 +26,23 @@ fun Routing.productRoute(repository: ProductRepository) {
                 get {
                     if (call.hasRole(RoleManagement.CUSTOMER, RoleManagement.SELLER, RoleManagement.ADMIN)) {
                         try {
-                            val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 0
-                            val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 10
-                            val maxPrice = call.request.queryParameters["maxPrice"]?.toDoubleOrNull() ?: 0.0
+                            val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
+                            val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 0
+                            val maxPrice = call.request.queryParameters["maxPrice"]?.toDoubleOrNull()
                             val minPrice = call.request.queryParameters["minPrice"]?.toDoubleOrNull() ?: 0.0
                             val categoryId = call.request.queryParameters["categoryId"]
                             val subCategoryId = call.request.queryParameters["subCategoryId"]
                             val brandId = call.request.queryParameters["brandId"]
+                            val searchQuery = call.request.queryParameters["searchQuery"]
                             val params = ProductWithFilter(
-                                limit, offset, maxPrice, minPrice, categoryId, subCategoryId, brandId
+                                limit = limit,
+                                offset = offset,
+                                maxPrice = maxPrice,
+                                minPrice = minPrice,
+                                categoryId = categoryId,
+                                subCategoryId = subCategoryId,
+                                brandId = brandId,
+                                searchQuery = searchQuery
                             )
                             val result = repository.getProducts(params)
 
@@ -131,7 +140,7 @@ fun Routing.productRoute(repository: ProductRepository) {
             }
             route("seller") {
                 get {
-                    if (call.hasRole(RoleManagement.SELLER)) {
+                    if (call.hasRole(RoleManagement.SELLER))    {
                         try {
                             val productId = call.request.queryParameters["productId"]
                             if (productId.isNullOrEmpty()) {

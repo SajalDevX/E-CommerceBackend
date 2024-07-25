@@ -11,9 +11,10 @@ class ProductSubCategoryRepositoryImpl(
 ) : ProductSubCategoryRepository {
     override suspend fun createProductSubcategory(
         categoryId: String,
-        subCategoryName: String
+        subCategoryName: String,
+        imageUrl:String
     ): Response<ProductSubCategoryResponse> {
-        val result = dao.createProductSubcategory(categoryId, subCategoryName)
+        val result = dao.createProductSubcategory(categoryId, subCategoryName,imageUrl)
         return if (result) {
             Response.Success(
                 ProductSubCategoryResponse(

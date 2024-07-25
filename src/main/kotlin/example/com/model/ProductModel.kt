@@ -17,8 +17,7 @@ data class AddProduct(
     val videoLink: String?,
     val hotDeal: String?,
     val buyOneGetOne: String?,
-    val imageOne: String?,
-    val imageTwo: String?,
+    val images: List<String> = emptyList(),
 )
 
 @Serializable
@@ -35,9 +34,8 @@ data class UpdateProduct(
     val videoLink: String? = null,
     val hotDeal: String? = null,
     val buyOneGetOne: String? = null,
-    val imageOne: String? = null,
-    val imageTwo: String? = null
-)
+    val images: List<String> = emptyList(),
+    )
 
 @Serializable
 data class ProductWithFilter(
@@ -46,6 +44,7 @@ data class ProductWithFilter(
     val maxPrice: Double?,
     val minPrice: Double?,
     val categoryId: String?,
+    val searchQuery: String? ,
     val subCategoryId: String?,
     val brandId: String?,
 )
