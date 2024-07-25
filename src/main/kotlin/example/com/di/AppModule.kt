@@ -63,7 +63,7 @@ val appModule = module {
     single<ProductCategoryDao> { ProductCategoryDaoImpl(get()) }
     single<ProductCategoryRepository> { ProductCategoryRepositoryImpl(get()) }
     single<ProductSubCategoryDao> { ProductSubCategoryDaoImpl(get()) }
-    single<ProductSubCategoryRepository> { ProductSubCategoryRepositoryImpl(get()) }
+    single<ProductSubCategoryRepository> { ProductSubCategoryRepositoryImpl(get(),get()) }
     single<BrandDao> { BrandDaoImpl(get()) }
     single<BrandRepository> { BrandRepositoryImpl(get()) }
     single<ShopDao> { ShopDaoImpl(get()) }

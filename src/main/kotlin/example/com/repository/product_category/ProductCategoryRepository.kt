@@ -8,6 +8,6 @@ interface ProductCategoryRepository {
 
     suspend fun createProductCategory(productCategoryName: String,imageUrl:String):Response<ProductCategoryResponse>
     suspend fun getProductCategory(paging: PagingData):Response<ProductCategoryResponse>
-    suspend fun updateProductCategory(productCategoryId:String,productCategoryName:String):Response<ProductCategoryResponse>
+//    suspend fun updateProductCategory(productCategoryId:String,productCategoryName:String):Response<ProductCategoryResponse>
     suspend fun deleteProductCategory(productCategoryId: String):Response<ProductCategoryResponse>
 }

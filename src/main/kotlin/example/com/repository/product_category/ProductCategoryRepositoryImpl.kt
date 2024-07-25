@@ -47,24 +47,24 @@ class ProductCategoryRepositoryImpl(
         }
     }
 
-    override suspend fun updateProductCategory(productCategoryId:String,productCategoryName:String): Response<ProductCategoryResponse> {
-        val result = dao.updateProductCategory(productCategoryId,productCategoryName)
-        return if(result){
-            Response.Success(
-                ProductCategoryResponse(
-                    success = true,
-                    message = "Product category updated successfully"
-                )
-            )
-        }else{
-            Response.Success(
-                ProductCategoryResponse(
-                    success = false,
-                    message = "Product category update failed"
-                )
-            )
-        }
-    }
+//    override suspend fun updateProductCategory(productCategoryId:String,productCategoryName:String): Response<ProductCategoryResponse> {
+//        val result = dao.updateProductCategory(productCategoryId,productCategoryName)
+//        return if(result){
+//            Response.Success(
+//                ProductCategoryResponse(
+//                    success = true,
+//                    message = "Product category updated successfully"
+//                )
+//            )
+//        }else{
+//            Response.Success(
+//                ProductCategoryResponse(
+//                    success = false,
+//                    message = "Product category update failed"
+//                )
+//            )
+//        }
+//    }
 
     override suspend fun deleteProductCategory(productCategoryId: String): Response<ProductCategoryResponse> {
         val result = dao.deleteProductCategory(productCategoryId)

@@ -1,21 +1,29 @@
 package example.com.repository.product_sub_category
 
+import example.com.dao.products.product_category.ProductCategoryDao
 import example.com.dao.products.product_subcategory.ProductSubCategoryDao
+import example.com.dao.products.product_subcategory.ProductSubCategoryEntity
 import example.com.model.ProductCategoryResponse
 import example.com.model.ProductSubCategoryResponse
 import example.com.utils.Response
 import io.ktor.http.*
 
 class ProductSubCategoryRepositoryImpl(
-    private val dao: ProductSubCategoryDao
+    private val dao: ProductSubCategoryDao,
+    private val subCategoryDao: ProductCategoryDao
 ) : ProductSubCategoryRepository {
     override suspend fun createProductSubcategory(
         categoryId: String,
         subCategoryName: String,
-        imageUrl:String
+        imageUrl: String
     ): Response<ProductSubCategoryResponse> {
-        val result = dao.createProductSubcategory(categoryId, subCategoryName,imageUrl)
-        return if (result) {
+        val result = dao.createProductSubcategory(categoryId, subCategoryName, imageUrl)
+        val data = ProductSubCategoryEntity(
+            categoryId, subCategoryName, imageUrl
+        )
+        val insert=subCategoryDao.updateProductCategory(categoryId, data)
+
+        return if (result&&insert) {
             Response.Success(
                 ProductSubCategoryResponse(
                     success = true,

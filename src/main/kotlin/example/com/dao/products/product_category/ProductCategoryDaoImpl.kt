@@ -3,6 +3,7 @@ package example.com.dao.products.product_category
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
+import example.com.dao.products.product_subcategory.ProductSubCategoryEntity
 import example.com.utils.PagingData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +14,7 @@ class ProductCategoryDaoImpl(
 ) : ProductCategoryDao {
 
     private val category = db.getCollection<ProductCategoryEntity>("product_category")
-    override suspend fun createProductCategory(addProductCategory: String,imageUrl:String): Boolean {
+    override suspend fun createProductCategory(addProductCategory: String, imageUrl: String): Boolean {
         val productCategory = ProductCategoryEntity(
             categoryName = addProductCategory, image = imageUrl
         )
@@ -27,12 +28,21 @@ class ProductCategoryDaoImpl(
         }
     }
 
-    override suspend fun updateProductCategory(id: String,name:String): Boolean {
-        val filter = Filters.eq("_id", id)
-        val update = Updates.set("categoryName", name)
-        val result: UpdateResult = category.updateOne(filter, update)
-        return result.modifiedCount>0
+    override suspend fun updateProductCategory(id: String, subCategoryEntity: ProductSubCategoryEntity): Boolean {
+        val data = category.findOneById(id)
+        return if (data != null) {
+            data.subCategories.add(subCategoryEntity)
+            val updateResult = category.updateOne(
+                Filters.eq("_id", id),
+                Updates.set("subCategories", data.subCategories)
+            )
+            updateResult.matchedCount > 0
+        } else {
+            false
+        }
     }
+
+
 
     override suspend fun deleteProductCategory(deleteProductCategory: String): Boolean {
         val filter = Filters.eq("_id", deleteProductCategory)
