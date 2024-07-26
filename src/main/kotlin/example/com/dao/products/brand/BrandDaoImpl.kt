@@ -13,11 +13,12 @@ class BrandDaoImpl(
     db: CoroutineDatabase
 ) : BrandDao {
     private val brand = db.getCollection<BrandEntity>("brand")
-    override suspend fun createBrand(brandName: String): Boolean {
+    override suspend fun createBrand(brandName: String,logo:String): Boolean {
         val brandExists = brand.findOne(BrandEntity::brandName eq brandName)
         return if (brandExists == null) {
             val productBrand = BrandEntity(
-                brandName = brandName
+                brandName = brandName,
+                brandLogo = logo
             )
             val result = brand.insertOne(productBrand)
             return result.wasAcknowledged()

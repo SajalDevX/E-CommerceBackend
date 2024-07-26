@@ -9,3 +9,7 @@ data class BrandResponse(
     val message:String,
     val brands:List<BrandEntity?> = emptyList()
 )
+@Serializable
+data class BrandTextParams(
+    val brandName:String
+)

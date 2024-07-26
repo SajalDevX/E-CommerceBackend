@@ -9,8 +9,8 @@ import io.ktor.http.*
 class BrandRepositoryImpl(
     private val dao:BrandDao
 ) : BrandRepository {
-    override suspend fun addBrand(brandName: String): Response<BrandResponse> {
-        val result = dao.createBrand(brandName)
+    override suspend fun addBrand(brandName: String,logo:String): Response<BrandResponse> {
+        val result = dao.createBrand(brandName,logo)
         return if(result){
             Response.Success(
                 BrandResponse(

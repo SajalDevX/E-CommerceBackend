@@ -12,5 +12,7 @@ object Constants {
         const val PRODUCT_SUBCATEGORY_IMAGE_FOLDER_PATH = "build/resources/main/static/$PRODUCT_SUBCATEGORY_IMAGE_FOLDER"
         const val PRODUCT_CATEGORY_IMAGE_FOLDER = "product-category-image/"
         const val PRODUCT_CATEGORY_IMAGE_FOLDER_PATH = "build/resources/main/static/$PRODUCT_CATEGORY_IMAGE_FOLDER"
+        const val PRODUCT_BRAND_IMAGE_FOLDER = "product-brand-image/"
+        const val PRODUCT_BRAND_IMAGE_FOLDER_PATH = "build/resources/main/static/$PRODUCT_BRAND_IMAGE_FOLDER"
     }
 }
