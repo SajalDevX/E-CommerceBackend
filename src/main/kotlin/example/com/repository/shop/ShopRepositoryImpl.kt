@@ -118,4 +118,27 @@ class ShopRepositoryImpl(
             )
         }
     }
+
+    override suspend fun getCurrentShop(userId: String): Response<ShopResponse> {
+        val result = dao.getShop(userId)
+        return if (result != null) {
+            Response.Success(
+                ShopResponse(
+                    success = true,
+                    shop = result,
+                    message = "Shop fetched successfully"
+                )
+            )
+        } else {
+            Response.Error(
+                code = HttpStatusCode.InternalServerError,
+                ShopResponse(
+                    success = false,
+                    message = "Shop  could not be fetched"
+
+                )
+            )
+        }
+    }
+
 }

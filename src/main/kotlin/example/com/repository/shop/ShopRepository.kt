@@ -10,4 +10,5 @@ interface ShopRepository {
     suspend fun updateShopCategory(shopCategoryId:String,shopCategoryName: String):Response<ShopCategoryResponse>
     suspend fun deleteShopCategory(shopCategoryId: String):Response<ShopCategoryResponse>
     suspend fun createShop(userId:String,shopCategoryId: String,shopName:String):Response<ShopResponse>
+    suspend fun getCurrentShop(userId:String):Response<ShopResponse>
 }

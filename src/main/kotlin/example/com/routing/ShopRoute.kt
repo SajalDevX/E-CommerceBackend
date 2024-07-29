@@ -194,6 +194,40 @@ fun Routing.shopRoute() {
                     }
                 }
             }
+            route("get-shop"){
+                get {
+                    if (call.hasRole(RoleManagement.SELLER, RoleManagement.ADMIN)) {
+                        try {
+                            val principal = call.principal<JWTPrincipal>()
+                            val userId = principal?.payload?.getClaim("userId")?.asString()
+
+                            val result = repository.getCurrentShop(userId!!)
+                            call.respond(
+                                status = result.code,
+                                message = result.data
+                            )
+                        } catch (badRequestError: BadRequestException) {
+                            return@get
+                        } catch (anyError: Throwable) {
+                            call.respond(
+                                status = HttpStatusCode.InternalServerError,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "An unexpected error has occurred, try again!"
+                                )
+                            )
+                        }
+                    } else {
+                        call.respond(
+                            status = HttpStatusCode.Forbidden,
+                            message = ShopResponse(
+                                success = false,
+                                message = "You do not have the required permissions to access this resource"
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -74,4 +74,10 @@ class ShopDaoImpl(
         }
     }
 
+    override suspend fun getShop(userId: String): ShopEntity? {
+        return withContext(Dispatchers.IO) {
+            shop.findOne(ShopEntity::userId eq userId)
+        }
+    }
+
 }

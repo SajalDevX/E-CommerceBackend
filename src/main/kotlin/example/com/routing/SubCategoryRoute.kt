@@ -39,7 +39,6 @@ fun Routing.productSubCategoryRoute() {
                             message = result.data
                         )
 
-
                     } catch (badRequestError: BadRequestException) {
                         return@get
                     } catch (anyError: Throwable) {

@@ -123,41 +123,41 @@ fun Routing.brandRoute() {
                     )
                 }
             }
-            put {
-                if (call.hasRole(RoleManagement.ADMIN)) {
-                    try {
-                        val brandId = call.request.queryParameters["brandId"]
-                        val brandName = call.request.queryParameters["brandName"]
-                        if (brandName.isNullOrEmpty() || brandId.isNullOrEmpty()) {
-                            return@put
-                        }
-                        val result = repository.updateBrand(brandId, brandName)
-                        call.respond(
-                            status = result.code,
-                            message = result.data
-                        )
-
-                    } catch (badRequestError: BadRequestException) {
-                        return@put
-                    } catch (anyError: Throwable) {
-                        call.respond(
-                            status = HttpStatusCode.InternalServerError,
-                            message = ProductResponse(
-                                success = false,
-                                message = "An unexpected error has occurred, try again!"
-                            )
-                        )
-                    }
-                } else {
-                    call.respond(
-                        status = HttpStatusCode.Forbidden,
-                        message = ProductResponse(
-                            success = false,
-                            message = "You do not have the required permissions to access this resource"
-                        )
-                    )
-                }
-            }
+//            put {
+//                if (call.hasRole(RoleManagement.ADMIN)) {
+//                    try {
+//                        val brandId = call.request.queryParameters["brandId"]
+//                        val brandName = call.request.queryParameters["brandName"]
+//                        if (brandName.isNullOrEmpty() || brandId.isNullOrEmpty()) {
+//                            return@put
+//                        }
+//                        val result = repository.updateBrand(brandId, brandName)
+//                        call.respond(
+//                            status = result.code,
+//                            message = result.data
+//                        )
+//
+//                    } catch (badRequestError: BadRequestException) {
+//                        return@put
+//                    } catch (anyError: Throwable) {
+//                        call.respond(
+//                            status = HttpStatusCode.InternalServerError,
+//                            message = ProductResponse(
+//                                success = false,
+//                                message = "An unexpected error has occurred, try again!"
+//                            )
+//                        )
+//                    }
+//                } else {
+//                    call.respond(
+//                        status = HttpStatusCode.Forbidden,
+//                        message = ProductResponse(
+//                            success = false,
+//                            message = "You do not have the required permissions to access this resource"
+//                        )
+//                    )
+//                }
+//            }
             delete {
                 if (call.hasRole(RoleManagement.ADMIN)) {
                     try {

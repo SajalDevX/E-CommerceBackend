@@ -28,8 +28,7 @@ fun Routing.shippingRoute() {
                         val params = call.receiveNullable<AddShipping>()
                         val principal = call.principal<JWTPrincipal>()
                         val userId = principal?.payload?.getClaim("userId")?.asString()
-                        println("Received parameters: $params")
-                        println("User ID: $userId")
+
                         if (params == null) {
                             call.respond(
                                 status = HttpStatusCode.InternalServerError,
