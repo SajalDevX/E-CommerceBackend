@@ -3,10 +3,14 @@ package example.com.dao.shop
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
+import example.com.dao.order.entity.OrderEntity
+import example.com.dao.products.product.entity.ProductEntity
+import example.com.dao.shop.entity.Orders
 import example.com.dao.shop.entity.ShopCategoryEntity
 import example.com.dao.shop.entity.ShopEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.litote.kmongo.addToSet
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 
@@ -15,7 +19,7 @@ class ShopDaoImpl(
 ) : ShopDao {
     private val shop = db.getCollection<ShopEntity>("shop")
     private val shopCategory = db.getCollection<ShopCategoryEntity>("shop_category")
-
+    private val products = db.getCollection<ProductEntity>("products")
     override suspend fun createShopCategory(shopCategoryName: String): Boolean {
         val shopCategoryExist =
             shopCategory.find(ShopCategoryEntity::shopCategoryName eq shopCategoryName).toList().singleOrNull()
@@ -79,5 +83,28 @@ class ShopDaoImpl(
             shop.findOne(ShopEntity::userId eq userId)
         }
     }
+    override suspend fun updateOrders(orderEntity: OrderEntity): Boolean {
+        return withContext(Dispatchers.IO) {
+            val shopUpdates = mutableListOf<UpdateResult>()
 
+            orderEntity.orderItems.forEach { orderItem ->
+                val product = products.findOne(ProductEntity::productId eq orderItem.productId)
+                product?.let {
+                    val shopEntity = shop.findOne(ShopEntity::userId eq product.userId)
+                    shopEntity?.let {
+                        val orderEntry = Orders(
+                            productId = orderItem.productId,
+                            qty = orderItem.quantity.toString()
+                        )
+                        val updateResult = shop.updateOne(
+                            ShopEntity::userId eq product.userId,
+                            addToSet(ShopEntity::orders, orderEntry)
+                        )
+                        shopUpdates.add(updateResult)
+                    }
+                }
+            }
+            shopUpdates.all { it.modifiedCount > 0 }
+        }
+    }
 }

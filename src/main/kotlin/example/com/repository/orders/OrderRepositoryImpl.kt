@@ -1,17 +1,18 @@
 package example.com.repository.orders
 
 import example.com.dao.order.OrderDao
+import example.com.dao.shop.ShopDao
 import example.com.mappers.OrderStatus
 import example.com.model.AddOrder
 import example.com.model.OrderData
 import example.com.model.OrderResponse
-import example.com.model.ProductResponse
 import example.com.utils.PagingData
 import example.com.utils.Response
 import io.ktor.http.*
 
 class OrderRepositoryImpl(
-    private val dao:OrderDao
+    private val dao:OrderDao,
+    private val shopDao: ShopDao
 ) : OrderRepository {
     override suspend fun createOrder(userId: String, addOrder: AddOrder): Response<OrderResponse> {
         val result = dao.createOrder(userId,addOrder)
@@ -24,6 +25,7 @@ class OrderRepositoryImpl(
                 )
             )
         } else {
+            shopDao.updateOrders(result)
             Response.Success(
                 data = OrderResponse(
                     success = true,

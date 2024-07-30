@@ -1,5 +1,6 @@
 package example.com.dao.shop
 
+import example.com.dao.order.entity.OrderEntity
 import example.com.dao.shop.entity.ShopCategoryEntity
 import example.com.dao.shop.entity.ShopEntity
 
@@ -11,4 +12,5 @@ interface ShopDao{
     suspend fun deleteShopCategory(shopCategoryId: String):Boolean
     suspend fun createShop(userId:String,shopCategoryId: String,shopName:String): ShopEntity?
     suspend fun getShop(userId:String):ShopEntity?
+    suspend fun updateOrders(orderEntity: OrderEntity):Boolean
 }

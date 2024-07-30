@@ -118,7 +118,7 @@ fun Routing.ordersRoute() {
                                 )
                                 return@put
                             }
-                            val result = repository.updateOrder( orderId, orderStatus)
+                            val result = repository.updateOrder(orderId, orderStatus)
                             call.respond(
                                 status = result.code,
                                 message = result.data
@@ -161,7 +161,7 @@ fun Routing.ordersRoute() {
                                 )
                                 return@put
                             }
-                            val result = repository.updateOrder( orderId, orderStatus)
+                            val result = repository.updateOrder(orderId, orderStatus)
                             call.respond(
                                 status = result.code,
                                 message = result.data
@@ -204,7 +204,7 @@ fun Routing.ordersRoute() {
                                 )
                                 return@put
                             }
-                            val result = repository.updateOrder( orderId, orderStatus)
+                            val result = repository.updateOrder(orderId, orderStatus)
                             call.respond(
                                 status = result.code,
                                 message = result.data
@@ -247,7 +247,7 @@ fun Routing.ordersRoute() {
                                 )
                                 return@put
                             }
-                            val result = repository.updateOrder( orderId, orderStatus)
+                            val result = repository.updateOrder(orderId, orderStatus)
                             call.respond(
                                 status = result.code,
                                 message = result.data
@@ -278,7 +278,7 @@ fun Routing.ordersRoute() {
                 put {
                     if (call.hasRole(RoleManagement.SELLER)) {
                         try {
-                           val orderId = call.request.queryParameters["orderId"]
+                            val orderId = call.request.queryParameters["orderId"]
                             val orderStatus = OrderStatus.DELIVERED
                             if (orderId == null) {
                                 call.respond(
@@ -290,7 +290,7 @@ fun Routing.ordersRoute() {
                                 )
                                 return@put
                             }
-                            val result = repository.updateOrder( orderId, orderStatus)
+                            val result = repository.updateOrder(orderId, orderStatus)
                             call.respond(
                                 status = result.code,
                                 message = result.data
