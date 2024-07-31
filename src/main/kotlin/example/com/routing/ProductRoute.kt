@@ -2,7 +2,10 @@ package example.com.routing
 
 import example.com.mappers.hasRole
 import example.com.mappers.toUpdateProduct
-import example.com.model.*
+import example.com.model.AddProduct
+import example.com.model.ProductResponse
+import example.com.model.ProductWithFilter
+import example.com.model.UpdateProduct
 import example.com.plugins.RoleManagement
 import example.com.repository.product.ProductRepository
 import example.com.utils.Constants
@@ -17,8 +20,8 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-fun Routing.productRoute(repository: ProductRepository) {
 
+fun Routing.productRoute(repository: ProductRepository) {
 
     authenticate("auth-jwt") {
         route("product") {
