@@ -25,6 +25,7 @@ fun Routing.productRoute(repository: ProductRepository) {
     authenticate("auth-jwt") {
         route("product") {
             route("get") {
+
                 get {
                     if (call.hasRole(RoleManagement.CUSTOMER, RoleManagement.SELLER, RoleManagement.ADMIN)) {
                         try {
