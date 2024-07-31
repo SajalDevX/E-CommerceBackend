@@ -17,7 +17,6 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlin.math.min
 
 fun Routing.productRoute(repository: ProductRepository) {
     authenticate("auth-jwt") {
@@ -26,6 +25,7 @@ fun Routing.productRoute(repository: ProductRepository) {
                 get {
                     if (call.hasRole(RoleManagement.CUSTOMER, RoleManagement.SELLER, RoleManagement.ADMIN)) {
                         try {
+
                             val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
                             val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 0
                             val maxPrice = call.request.queryParameters["maxPrice"]?.toDoubleOrNull()
