@@ -25,7 +25,6 @@ fun Routing.productRoute(repository: ProductRepository) {
                 get {
                     if (call.hasRole(RoleManagement.CUSTOMER, RoleManagement.SELLER, RoleManagement.ADMIN)) {
                         try {
-
                             val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
                             val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 0
                             val maxPrice = call.request.queryParameters["maxPrice"]?.toDoubleOrNull()
