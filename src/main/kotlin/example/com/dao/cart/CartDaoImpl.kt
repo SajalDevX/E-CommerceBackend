@@ -62,16 +62,13 @@ class CartDaoImpl(
         }
     }
 
-    override suspend fun updateCartQuantity(userId: String, productId: String, qty: Int): CartEntity? {
+    override suspend fun updateCartQuantity(userId:String, productId:String, qty: Int): CartEntity? {
         val existingCart = cart.findOne(CartEntity::userId eq userId)
         return if (existingCart != null) {
             val updatedProducts = existingCart.products.toMutableMap()
             if (updatedProducts.containsKey(productId)) {
-                if (qty > 0) {
-                    updatedProducts[productId] = qty
-                } else {
-                    updatedProducts.remove(productId)
-                }
+                // Increase quantity by 1
+                updatedProducts[productId] = updatedProducts[productId]!! + 1
                 val updatedCart = existingCart.copy(products = updatedProducts)
                 cart.updateOne(CartEntity::userId eq userId, updatedCart)
                 updatedCart
@@ -83,20 +80,22 @@ class CartDaoImpl(
         }
     }
 
-    override suspend fun removeCartItem(userId: String, qty: Int, productId: String): Boolean {
+    override suspend fun removeCartItem(userId:String, qty: Int, productId:String): Boolean {
         val existingCart = cart.findOne(CartEntity::userId eq userId)
         return if (existingCart != null) {
             val updatedProducts = existingCart.products.toMutableMap()
             if (updatedProducts.containsKey(productId)) {
                 val currentQty = updatedProducts[productId]!!
-                if (qty >= currentQty) {
+                if (currentQty <= 1) {
+                    // Remove the item from the cart if the quantity is 1 or less
                     updatedProducts.remove(productId)
                 } else {
-                    updatedProducts[productId] = currentQty - qty
+                    // Decrease the quantity by 1
+                    updatedProducts[productId] = currentQty - 1
                 }
                 val updatedCart = existingCart.copy(products = updatedProducts)
-                cart.updateOne(CartEntity::userId eq userId, updatedCart)
-                true
+                val result = cart.updateOne(CartEntity::userId eq userId, updatedCart)
+                result.wasAcknowledged()  // Return true if the update was acknowledged
             } else {
                 false
             }
@@ -104,6 +103,7 @@ class CartDaoImpl(
             false
         }
     }
+
 
     override suspend fun deleteAllFromCart(userId: String): Boolean {
         val existingCart = cart.findOne(CartEntity::userId eq userId)
