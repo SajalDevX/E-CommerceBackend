@@ -6,7 +6,12 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 <a href="https://github.com/SajalDevX"><img alt="License" src="https://img.shields.io/static/v1?label=GitHub&message=SajalDevX&color=C51162"/></a>
 
-Ktor E-Commerce Backend, a high-performance backend solution for your e-commerce application built with [ktor](https://ktor.io/docs/welcome.html).
+Ktor E-Commerce Backend, a high-performance backend solution for your e-commerce application built with [Ktor](https://ktor.io/docs/welcome.html).
+
+This repository contains the client-side code for the E-commerce App built using Kotlin Multiplatform.
+
+The backend server code for this Social Media App is being developed in parallel. Find the server repository [here](https://github.com/SajalDevX/FlashCart).
+
 
 
 # Features
