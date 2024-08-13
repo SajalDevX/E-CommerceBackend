@@ -4,11 +4,10 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
 import example.com.dao.users.entity.UserEntity
+import example.com.model.AddUserAddress
 import example.com.model.UpdateProfile
-import example.com.model.UpdateUserAddress
 import org.bson.conversions.Bson
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.coroutine.updateOne
 
 class UserDaoImpl(
     db: CoroutineDatabase
@@ -53,30 +52,27 @@ class UserDaoImpl(
         }
     }
 
-
-    override suspend fun updateProfileAddress(userId: String, updateAddress: UpdateUserAddress): UserEntity? {
-        // Filter to find the user by _id
+    override suspend fun addProfileAddress(userId: String, addAddress: AddUserAddress): UserEntity? {
         val filter = Filters.eq("_id", userId)
 
-        // Prepare the updates for the UserAddress
-        val updates = mutableListOf<Bson>()
-        updateAddress.fatherName.let { updates.add(Updates.set("userDetails.addresses.0.fatherName", it)) }
-        updateAddress.motherName.let { updates.add(Updates.set("userDetails.addresses.0.motherName", it)) }
-        updateAddress.pin.let { updates.add(Updates.set("userDetails.addresses.0.pin", it)) }
-        updateAddress.mobileNumber.let { updates.add(Updates.set("userDetails.addresses.0.mobileNumber", it)) }
-        updateAddress.otherMobileNumber?.let { updates.add(Updates.set("userDetails.addresses.0.otherMobileNumber", it)) }
-        updateAddress.city.let { updates.add(Updates.set("userDetails.addresses.0.city", it)) }
-        updateAddress.road.let { updates.add(Updates.set("userDetails.addresses.0.road", it)) }
-        updateAddress.state.let { updates.add(Updates.set("userDetails.addresses.0.state", it)) }
+        val update = Updates.push("userDetails.addresses", addAddress)
 
-        // Combine the updates
-        val update = Updates.combine(updates)
-
-        // Perform the update
         val updateResult: UpdateResult = users.updateOne(filter, update)
 
         return if (updateResult.matchedCount > 0) {
-            // Return the updated user entity
+            findUserById(userId)
+        } else {
+            null
+        }
+    }
+    override suspend fun deleteAddress(userId: String, index: Int): UserEntity? {
+        val filter = Filters.eq("_id", userId)
+        val update = Updates.unset("userDetails.addresses.$index")
+
+        val updateResult = users.updateOne(filter, update)
+
+        return if (updateResult.matchedCount > 0) {
+            users.updateOne(filter, Updates.pull("userDetails.addresses", null))
             findUserById(userId)
         } else {
             null

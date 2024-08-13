@@ -1,9 +1,10 @@
 package example.com.routing
 
 import example.com.mappers.hasRole
+import example.com.model.AddUserAddress
 import example.com.model.ProductResponse
+import example.com.model.ProfileResponse
 import example.com.model.UpdateProfile
-import example.com.model.UpdateUserAddress
 import example.com.plugins.RoleManagement
 import example.com.repository.profile.ProfileRepository
 import example.com.utils.Constants
@@ -39,7 +40,7 @@ fun Routing.profileRoute() {
                     } catch (anyError: Throwable) {
                         call.respond(
                             status = HttpStatusCode.InternalServerError,
-                            message = ProductResponse(
+                            message = ProfileResponse(
                                 success = false,
                                 message = "An unexpected error has occurred, try again!"
                             )
@@ -48,7 +49,7 @@ fun Routing.profileRoute() {
                 } else {
                     call.respond(
                         status = HttpStatusCode.Forbidden,
-                        message = ProductResponse(
+                        message = ProfileResponse(
                             success = false,
                             message = "You do not have the required permissions to access this resource"
                         )
@@ -113,14 +114,14 @@ fun Routing.profileRoute() {
                     )
                 }
             }
-            put("address") {
+            put("address/add") {
                 if (call.hasRole(RoleManagement.SELLER, RoleManagement.ADMIN, RoleManagement.CUSTOMER)) {
                     try {
                         val principal = call.principal<JWTPrincipal>()
                         val userId = principal?.payload?.getClaim("userId")?.asString()
-                        val params = call.receiveNullable<UpdateUserAddress>()
+                        val params = call.receiveNullable<AddUserAddress>()
 
-                        val result = repository.updateProfileAddress(userId!!, params!!)
+                        val result = repository.addNewProfileAddress(userId!!, params!!)
                         call.respond(
                             status = result.code,
                             message = result.data
@@ -146,6 +147,72 @@ fun Routing.profileRoute() {
                     )
                 }
             }
+            put("address/delete") {
+                if (call.hasRole(RoleManagement.SELLER, RoleManagement.ADMIN, RoleManagement.CUSTOMER)) {
+                    try {
+                        val principal = call.principal<JWTPrincipal>()
+                        val userId = principal?.payload?.getClaim("userId")?.asString()
+
+                        if (userId == null) {
+                            call.respond(
+                                status = HttpStatusCode.Unauthorized,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "Unauthorized request."
+                                )
+                            )
+                            return@put
+                        }
+
+                        val index = call.parameters["index"]?.toIntOrNull()
+
+                        if (index == null) {
+                            call.respond(
+                                status = HttpStatusCode.BadRequest,
+                                message = ProductResponse(
+                                    success = false,
+                                    message = "Invalid or missing index parameter."
+                                )
+                            )
+                            return@put
+                        }
+                        val result = repository.deleteAddress(userId, index)
+
+                        call.respond(
+                            status = HttpStatusCode.OK,
+                            message = ProductResponse(
+                                success = true,
+                                message = "Address deleted successfully."
+                            )
+                        )
+                    } catch (badRequestError: BadRequestException) {
+                        call.respond(
+                            status = HttpStatusCode.BadRequest,
+                            message = ProductResponse(
+                                success = false,
+                                message = "Bad request."
+                            )
+                        )
+                    } catch (anyError: Throwable) {
+                        call.respond(
+                            status = HttpStatusCode.InternalServerError,
+                            message = ProductResponse(
+                                success = false,
+                                message = "An unexpected error has occurred, try again!"
+                            )
+                        )
+                    }
+                } else {
+                    call.respond(
+                        status = HttpStatusCode.Forbidden,
+                        message = ProductResponse(
+                            success = false,
+                            message = "You do not have the required permissions to access this resource"
+                        )
+                    )
+                }
+            }
+
         }
     }
 }

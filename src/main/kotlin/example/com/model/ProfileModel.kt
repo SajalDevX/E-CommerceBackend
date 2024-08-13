@@ -12,8 +12,9 @@ data class UpdateProfile(
     val gender: String,
 )
 
+
 @Serializable
-data class UpdateUserAddress(
+data class AddUserAddress(
     val fatherName: String,
     val motherName: String,
     val pin: String,

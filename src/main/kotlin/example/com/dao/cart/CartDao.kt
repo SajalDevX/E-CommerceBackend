@@ -8,6 +8,7 @@ interface CartDao {
     suspend fun updateCartQuantity(userId:String,productId:String,qty: Int):CartEntity?
     suspend fun removeCartItem(userId:String,qty: Int,productId:String):Boolean
     suspend fun deleteAllFromCart(userId:String):Boolean
+    suspend fun deleteSelectedItemFromCart(userId:String,productId:String):Boolean
 
 
 }

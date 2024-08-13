@@ -62,7 +62,7 @@ class CartDaoImpl(
         }
     }
 
-    override suspend fun updateCartQuantity(userId:String, productId:String, qty: Int): CartEntity? {
+    override suspend fun updateCartQuantity(userId: String, productId: String, qty: Int): CartEntity? {
         val existingCart = cart.findOne(CartEntity::userId eq userId)
         return if (existingCart != null) {
             val updatedProducts = existingCart.products.toMutableMap()
@@ -80,7 +80,7 @@ class CartDaoImpl(
         }
     }
 
-    override suspend fun removeCartItem(userId:String, qty: Int, productId:String): Boolean {
+    override suspend fun removeCartItem(userId: String, qty: Int, productId: String): Boolean {
         val existingCart = cart.findOne(CartEntity::userId eq userId)
         return if (existingCart != null) {
             val updatedProducts = existingCart.products.toMutableMap()
@@ -111,6 +111,23 @@ class CartDaoImpl(
             val updatedCart = existingCart.copy(products = emptyMap())
             cart.updateOne(CartEntity::userId eq userId, updatedCart)
             true
+        } else {
+            false
+        }
+    }
+
+    override suspend fun deleteSelectedItemFromCart(userId: String, productId: String): Boolean {
+        val existingCart = cart.findOne(CartEntity::userId eq userId)
+        return if (existingCart != null) {
+            val updatedProducts = existingCart.products.toMutableMap()
+            if (updatedProducts.containsKey(productId)) {
+                updatedProducts.remove(productId)
+                val updatedCart = existingCart.copy(products = updatedProducts)
+                val result = cart.updateOne(CartEntity::userId eq userId, updatedCart)
+                result.modifiedCount>0
+            } else {
+                false
+            }
         } else {
             false
         }
