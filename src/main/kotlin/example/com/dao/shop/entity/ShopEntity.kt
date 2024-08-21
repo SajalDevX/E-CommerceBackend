@@ -12,12 +12,13 @@ data class ShopEntity(
     val shopCategoryId: String,
     val shopCategoryName: String,
     val shopName: String,
-//    val shopItems:Map<String,Int> = emptyMap(),
     val orders: List<Orders> = emptyList()
 )
 
 @Serializable
 data class Orders(
+    val userId:String,
+    val orderId:String,
     val productId: String,
     val qty: String
 )

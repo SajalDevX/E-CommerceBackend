@@ -52,7 +52,6 @@ class ProfileRepositoryImpl(
         }
     }
 
-
     override suspend fun getProfile(userId: String): Response<ProfileResponse> {
         val result = dao.findUserById(userId)
         return if (result==null) {

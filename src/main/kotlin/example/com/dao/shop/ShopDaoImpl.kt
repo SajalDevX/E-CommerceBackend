@@ -86,25 +86,42 @@ class ShopDaoImpl(
     override suspend fun updateOrders(orderEntity: OrderEntity): Boolean {
         return withContext(Dispatchers.IO) {
             val shopUpdates = mutableListOf<UpdateResult>()
+            val userId = orderEntity.userId
+            val orderId = orderEntity.orderId
 
-            orderEntity.orderItems.forEach { orderItem ->
-                val product = products.findOne(ProductEntity::productId eq orderItem.productId)
-                product?.let {
-                    val shopEntity = shop.findOne(ShopEntity::userId eq product.userId)
+            // Group the order items by their corresponding seller (shop)
+            val shopOrdersMap = orderEntity.orderItems.groupBy { orderItem ->
+                // Find the product entity to get the seller (shop) ID
+                products.findOne(ProductEntity::productId eq orderItem.productId)?.userId
+            }
+
+            // Iterate over each seller (shop) and update their orders
+            shopOrdersMap.forEach { (sellerId, orderItems) ->
+                sellerId?.let { validSellerId ->
+                    val shopEntity = shop.findOne(ShopEntity::userId eq validSellerId)
                     shopEntity?.let {
-                        val orderEntry = Orders(
-                            productId = orderItem.productId,
-                            qty = orderItem.quantity.toString()
-                        )
-                        val updateResult = shop.updateOne(
-                            ShopEntity::userId eq product.userId,
-                            addToSet(ShopEntity::orders, orderEntry)
-                        )
-                        shopUpdates.add(updateResult)
+                        orderItems.forEach { orderItem ->
+                            val orderEntry = Orders(
+                                productId = orderItem.productId,
+                                qty = orderItem.quantity.toString(),
+                                userId = userId,
+                                orderId = orderId
+                            )
+                            // Update the shop's orders with the current order entry
+                            val updateResult = shop.updateOne(
+                                ShopEntity::userId eq validSellerId,
+                                addToSet(ShopEntity::orders, orderEntry)
+                            )
+                            shopUpdates.add(updateResult)
+                        }
                     }
                 }
             }
+
+            // Check if all updates were successful
             shopUpdates.all { it.modifiedCount > 0 }
         }
     }
+
+
 }
