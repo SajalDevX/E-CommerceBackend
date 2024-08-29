@@ -10,7 +10,7 @@ Ktor E-Commerce Backend, a high-performance backend solution for your e-commerce
 
 This repository contains the client-side code for the E-commerce App built using Kotlin Multiplatform.
 
-The backend server code for this Social Media App is being developed in parallel. Find the server repository [here](https://github.com/SajalDevX/FlashCart).
+The backend Frontend for the E-commerce is being developed in parallel. Find the repository [here](https://github.com/SajalDevX/FlashCart).
 
 
 
